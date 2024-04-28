@@ -19,14 +19,8 @@ export const createValidation = validation((getSchema) => ({
       nome: yup.string().required().min(3),
     })
   ),
-  query: getSchema<IFilter>(
-    yup.object().shape({
-      filter: yup.string().required().min(3),
-    })
-  ),
 }));
 
 export const create = async (req: Request<{}, {}, ICargo>, res: Response) => {
-  let validatedData: ICargo | undefined = undefined;
-  res.send("Create");
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado");
 };
