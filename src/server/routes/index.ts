@@ -4,27 +4,27 @@ import { CargosControllers } from "../controllers";
 const router = Router();
 
 router.get(
-  "/cidades",
+  "/cargos",
   CargosControllers.getAllValidation,
   CargosControllers.getAll
 );
 router.post(
-  "/cidades",
+  "/cargos",
   CargosControllers.createValidation,
   CargosControllers.create
 );
 router.get(
-  "/cidades/:id",
+  "/cargos/:id",
   CargosControllers.getByIdValidation,
   CargosControllers.getById
 );
 router.put(
-  "/cidades/:id",
+  "/cargos/:id",
   CargosControllers.updateByIdValidation,
   CargosControllers.updateById
 );
 router.delete(
-  "/cidades/:id",
+  "/cargos/:id",
   CargosControllers.deleteByIdValidation,
   CargosControllers.deleteById
 );
