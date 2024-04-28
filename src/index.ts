@@ -1,5 +1,3 @@
-import "dotenv/config"
-import { server } from './server/Server';
-const port = process.env.PORT
+import { server } from "./server/Server";
 
-server.listen(port, () => console.log(`Servidor online e rodando na porta ${port}`))
+server.listen(process.env.PORT, () => console.log(`Servidor online`));
