@@ -4,4 +4,4 @@ yarn-error.log
 .env
 MCustomers.docx
 /coverage
-.sqlite
+*.sqlite
