@@ -6,9 +6,6 @@ import { validation } from "../../shared/middlewares";
 interface ICargo {
   nome: string;
 }
-interface IFilter {
-  filter?: string;
-}
 
 export const createValidation = validation((getSchema) => ({
   body: getSchema<ICargo>(
