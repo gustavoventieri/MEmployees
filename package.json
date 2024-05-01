@@ -30,6 +30,6 @@
     "knex:migrate": "knex --knexfile ./src/server/database/knex/Enviroment.ts migrate:latest",
     "knex:rollback": "knex --knexfile ./src/server/database/knex/Enviroment.ts migrate:rollback",
     "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Enviroment.ts migrate:rollback --all",
-    "knex:seed": "knex --knexfile ./src/server/database/knex/Enviroment.ts seed:latest"
+    "knex:seed": "knex --knexfile ./src/server/database/knex/Enviroment.ts seed:run"
   }
 }

@@ -2,6 +2,6 @@
 /build
 yarn-error.log
 .env
-MCustomers.docx
+*.docx
 /coverage
 *.sqlite
