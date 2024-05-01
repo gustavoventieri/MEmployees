@@ -10,7 +10,7 @@ export async function up(knex: Knex) {
       table.comment("Tabela usada para armazenar cargos do sistema");
     })
     .then(() => {
-      console.log(`Create Table ${ETableNames.cargo}`);
+      console.log(`Created Table ${ETableNames.cargo}`);
     });
 }
 
