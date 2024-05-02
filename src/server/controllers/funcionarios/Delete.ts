@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
-
 import { validation } from "../../shared/middlewares";
-import { CargoProviders } from "../../database/providers/cargos";
+import { FuncionariosProviders } from "../../database/providers/funcionarios";
 
 interface IParamProps {
   id?: number;
@@ -25,7 +24,7 @@ export const deleteById = async (req: Request<IParamProps>, res: Response) => {
     });
   }
 
-  const result = await CargoProviders.deleteById(req.params.id);
+  const result = await FuncionariosProviders.deleteById(req.params.id);
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {

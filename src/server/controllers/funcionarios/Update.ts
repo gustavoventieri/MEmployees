@@ -2,19 +2,20 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
 import { validation } from "../../shared/middlewares";
-import { ICargo } from "../../database/models";
-import { CargoProviders } from "../../database/providers/cargos";
-
+import { IFuncionario } from "../../database/models";
+import { FuncionariosProviders } from "../../database/providers/funcionarios";
 interface IParamProps {
   id?: number;
 }
 
-interface IBodyProps extends Omit<ICargo, "id"> {}
+interface IBodyProps extends Omit<IFuncionario, "id"> {}
 
 export const updateByIdValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(
     yup.object().shape({
-      nome: yup.string().required().min(3),
+      nomeCompleto: yup.string().required().min(3),
+      email: yup.string().required().email(),
+      cargoid: yup.number().required(),
     })
   ),
   params: getSchema<IParamProps>(
@@ -36,7 +37,10 @@ export const updateById = async (
     });
   }
 
-  const result = await CargoProviders.updateById(req.params.id, req.body);
+  const result = await FuncionariosProviders.updateById(
+    req.params.id,
+    req.body
+  );
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {
