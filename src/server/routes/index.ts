@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { CargosControllers, FuncionariosControllers } from "../controllers";
+import {
+  CargosControllers,
+  FuncionariosControllers,
+  UsuarioControllers,
+} from "../controllers";
 const router = Router();
 
 // Rotas de Cargos
@@ -55,4 +59,16 @@ router.delete(
   FuncionariosControllers.deleteByIdValidation,
   FuncionariosControllers.deleteById
 );
+
+router.post(
+  "/entrar",
+  UsuarioControllers.signInValidation,
+  UsuarioControllers.signIn
+);
+router.post(
+  "/cadastrar",
+  UsuarioControllers.signUpValidation,
+  UsuarioControllers.signUp
+);
+
 export { router };
