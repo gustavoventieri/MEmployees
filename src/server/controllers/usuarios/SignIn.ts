@@ -10,7 +10,7 @@ interface IBodyProps extends Omit<IUsuario, "id" | "nome"> {}
 export const signInValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(
     yup.object().shape({
-      email: yup.string().required().min(6),
+      email: yup.string().email().required().min(6),
       senha: yup.string().required().min(8),
     })
   ),
@@ -39,6 +39,8 @@ export const signIn = async (
       },
     });
   } else {
-    return res.status(StatusCodes.OK).json({ acessToken: "teste.teste.teste" });
+    return res
+      .status(StatusCodes.OK)
+      .json({ accessToken: "teste.teste.teste" });
   }
 };
