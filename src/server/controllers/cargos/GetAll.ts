@@ -33,6 +33,8 @@ export const getAll = async (
   );
   const count = await CargoProviders.count(req.query.filter);
 
+  console.log(req.headers.idUsuario);
+
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: { default: result.message },
