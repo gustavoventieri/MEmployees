@@ -30,7 +30,7 @@ describe("funcionarios - Create", () => {
     });
 
     expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
-    expect(res1.body).toHaveProperty("errors.default");
+    expect(res1.body).toHaveProperty("error.default");
   });
 
   it("Cria registro", async () => {

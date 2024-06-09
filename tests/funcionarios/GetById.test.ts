@@ -29,8 +29,8 @@ describe("funcionarios - GetById", () => {
   it("Tenta buscar registro sem token de autenticação (JWT)", async () => {
     const res1 = await testServer.get("/funcionarios/99999").send();
 
-    expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
-    expect(res1.body).toHaveProperty("errors.default");
+    expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
+    expect(res1.body).toHaveProperty("error.default");
   });
 
   it("Busca registro por id", async () => {
@@ -46,6 +46,7 @@ describe("funcionarios - GetById", () => {
 
     const resBuscada = await testServer
       .get(`/funcionarios/${res1.body}`)
+      .set({ Authorization: `Bearer ${accessToken}` })
       .send();
     expect(resBuscada.statusCode).toEqual(StatusCodes.OK);
     expect(resBuscada.body).toHaveProperty("nomeCompleto");

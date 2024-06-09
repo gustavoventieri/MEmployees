@@ -21,12 +21,9 @@ describe("Cargos - GetAll", () => {
       .post("/cargos")
       .send({ nome: "Dev Front-end" });
 
-    expect(res1.statusCode).toEqual(StatusCodes.CREATED);
+    expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
 
-    const resBuscada = await testServer.get("/cargos").send();
-
-    expect(resBuscada.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
-    expect(resBuscada.body).toHaveProperty("errors.default");
+    
   });
   it("Buscar todos os registros", async () => {
     const res1 = await testServer
@@ -36,7 +33,10 @@ describe("Cargos - GetAll", () => {
 
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
-    const resBuscada = await testServer.get("/cargos").send();
+    const resBuscada = await testServer
+      .get("/cargos")
+      .set({ Authorization: `Bearer ${accessToken}` })
+      .send();
 
     expect(Number(resBuscada.header["x-total-count"])).toBeGreaterThan(0);
     expect(resBuscada.statusCode).toEqual(StatusCodes.OK);

@@ -27,14 +27,20 @@ describe("funcionarios - GetAll", () => {
   });
 
   it("Busca registros", async () => {
-    const res1 = await testServer.post("/funcionarios").set({ Authorization: `Bearer ${accessToken}` }).send({
-      cargoid,
-      email: "jucagetall@gmail.com",
-      nomeCompleto: "Juca silva",
-    });
+    const res1 = await testServer
+      .post("/funcionarios")
+      .set({ Authorization: `Bearer ${accessToken}` })
+      .send({
+        cargoid,
+        email: "jucagetall@gmail.com",
+        nomeCompleto: "Juca silva",
+      });
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
-    const resBuscada = await testServer.get("/funcionarios").send();
+    const resBuscada = await testServer
+      .get("/funcionarios")
+      .set({ Authorization: `Bearer ${accessToken}` })
+      .send();
     expect(Number(resBuscada.header["x-total-count"])).toBeGreaterThan(0);
     expect(resBuscada.statusCode).toEqual(StatusCodes.OK);
     expect(resBuscada.body.length).toBeGreaterThan(0);

@@ -18,13 +18,14 @@ describe("Cargos - DeleteById", () => {
   it("Apaga registro sem token de autorização (JWT)", async () => {
     const res1 = await testServer
       .post("/cargos")
+      .set({ Authorization: `Bearer ${accessToken}` })
       .send({ nome: "Dev Front-end" });
 
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
     const resApagada = await testServer.delete(`/cargos/${res1.body}`).send();
 
-    expect(resApagada.statusCode).toEqual(StatusCodes.NO_CONTENT);
+    expect(resApagada.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
   });
   it("Apaga registro", async () => {
     const res1 = await testServer
@@ -34,7 +35,10 @@ describe("Cargos - DeleteById", () => {
 
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
-    const resApagada = await testServer.delete(`/cargos/${res1.body}`).send();
+    const resApagada = await testServer
+      .delete(`/cargos/${res1.body}`)
+      .set({ Authorization: `Bearer ${accessToken}` })
+      .send();
 
     expect(resApagada.statusCode).toEqual(StatusCodes.NO_CONTENT);
   });

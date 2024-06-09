@@ -22,7 +22,7 @@ describe("Cargos - Create", () => {
     const res1 = await testServer.post("/cargos").send({ nome: "Ca" });
 
     expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
-    expect(res1.body).toHaveProperty("errors.default");
+    expect(res1.body).toHaveProperty("error.default");
   });
   it("Cria registro", async () => {
     const res1 = await testServer

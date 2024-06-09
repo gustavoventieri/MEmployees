@@ -29,7 +29,7 @@ describe("funcionarios - DeleteById", () => {
     const res1 = await testServer.delete("/funcionarios/99999").send();
 
     expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
-    expect(res1.body).toHaveProperty("errors.default");
+    expect(res1.body).toHaveProperty("error.default");
   });
   it("Apaga registro", async () => {
     const res1 = await testServer
@@ -44,6 +44,7 @@ describe("funcionarios - DeleteById", () => {
 
     const resApagada = await testServer
       .delete(`/funcionarios/${res1.body}`)
+      .set({ Authorization: `Bearer ${accessToken}` })
       .send();
     expect(resApagada.statusCode).toEqual(StatusCodes.NO_CONTENT);
   });
