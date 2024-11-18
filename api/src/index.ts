@@ -1,3 +1,5 @@
 import { server } from "./server/Server";
 
-server.listen(8080, () => console.log("Servidor Online e Rodando na Porta "));
+// Iniciando o servidor
+server.listen(process.env.PORT || 8080, () => console.log(`Servidor Rodando na Porta ${process.env.PORT || 8080}`)
+);
