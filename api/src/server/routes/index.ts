@@ -1,9 +1,15 @@
 import { Router } from "express";
 
+import {
+  PositionsControler,
+  EmployeesControler,
+  UsersControler,
+} from "../controller";
+
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.send("Ola, dev");
-});
+// Rotas de Cargos
+router.post("/position", PositionsControler.create);
+
 
 export { router };
