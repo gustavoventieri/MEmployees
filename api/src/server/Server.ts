@@ -1,10 +1,11 @@
+import "dotenv/config";
+import "./shared/services/YupTranslations";
 import express from "express";
 import { router } from "./routes";
-import "dotenv/config";
 
 // Instanciando o servidor
 const server = express();
-
+server.use(express.json());
 // Utiliando as rotas no servidor
 server.use(router);
 

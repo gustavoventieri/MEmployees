@@ -9,10 +9,10 @@
     "start": "ts-node-dev ./src/index.ts"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "http-status-codes": "^2.3.0",
-    "dotenv": "^16.4.5"
-    
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
