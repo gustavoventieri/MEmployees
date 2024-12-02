@@ -2,22 +2,23 @@ import { Request, RequestHandler, Response } from "express";
 import * as yup from "yup";
 import { validation } from "../../shared/middlewares";
 import { StatusCodes } from "http-status-codes";
-interface IBodyProps {
-  name: string;
+
+interface IParamProps {
+  id?: number;
 }
 
 // Validação para o body da requisação
-export const createPositionValidation = validation((getSchema) => ({
-  body: getSchema<IBodyProps>(
+export const deletePositionByIdValidation = validation((getSchema) => ({
+  params: getSchema<IParamProps>(
     yup.object().shape({
-      name: yup.string().required().max(150).min(3),
+      id: yup.number().integer().optional().moreThan(0),
     })
   ),
 }));
 
-// Controller que cria um cargo
-export const createPosition = async (
-  req: Request<{}, {}, IBodyProps>,
+// Controller que exclui um cargo
+export const deletePositionById = async (
+  req: Request<IParamProps>,
   res: Response
 ) => {
   console.log(req.body);

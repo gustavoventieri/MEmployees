@@ -9,9 +9,12 @@
     "start": "ts-node-dev ./src/index.ts"
   },
   "dependencies": {
+    "@types/jest": "^29.5.14",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "http-status-codes": "^2.3.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
     "yup": "^1.4.0"
   },
   "devDependencies": {
