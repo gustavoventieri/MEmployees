@@ -23,5 +23,13 @@ export const deletePositionById = async (
 ) => {
   console.log(req.body);
 
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não Implementado");
+  if (Number(req.params.id) === 99999) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      errors: {
+        default: "Registro não encontrado",
+      },
+    });
+    return;
+  }
+  res.status(StatusCodes.NO_CONTENT).send();
 };

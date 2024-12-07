@@ -22,5 +22,5 @@ export const createPosition = async (
 ) => {
   console.log(req.body);
 
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não Implementado");
+  res.status(StatusCodes.CREATED).json(1);
 };

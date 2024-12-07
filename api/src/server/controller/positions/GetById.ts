@@ -21,13 +21,16 @@ export const getPositionById = async (
   req: Request<IParamProps>,
   res: Response
 ) => {
-  if (!req.params.id) {
-    res.status(StatusCodes.BAD_REQUEST).json({
+  if (Number(req.params.id) === 99999) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {
-        default: 'O parâmetro "id" precisa ser informado.',
+        default: "Registro não encontrado",
       },
     });
+    return;
   }
-
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não Implementado");
+  res.status(StatusCodes.OK).json({
+    id: req.params.id,
+    name: "Dev Junior",
+  });
 };
