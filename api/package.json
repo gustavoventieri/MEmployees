@@ -7,7 +7,10 @@
   "private": false,
   "scripts": {
     "start": "ts-node-dev ./src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "rollback": "knex --knexfile ./src/server/database/knex/Enviroment.ts migrate:rollback",
+    "migrate": "knex --knexfile ./src/server/database/knex/Enviroment.ts migrate:latest",
+    "rollback-all": "knex --knexfile ./src/server/database/knex/Enviroment.ts migrate:rollback --all"
   },
   "dependencies": {
     "@types/jest": "^29.5.14",
@@ -16,13 +19,13 @@
     "http-status-codes": "^2.3.0",
     "jest": "^29.7.0",
     "knex": "^3.1.0",
+    "sqlite3": "^5.1.7",
     "ts-jest": "^29.2.5",
     "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/supertest": "^6.0.2",
-    "sqlite": "^5.1.1",
     "supertest": "^7.0.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.3"

@@ -2,9 +2,9 @@ import { Request, RequestHandler, Response } from "express";
 import * as yup from "yup";
 import { validation } from "../../shared/middlewares";
 import { StatusCodes } from "http-status-codes";
-interface IBodyProps {
-  name: string;
-}
+import { Knex } from "../../database/knex";
+import { IPosition } from "../../database/models";
+interface IBodyProps extends Omit<IPosition, "id"> {}
 
 // Validação para o body da requisação
 export const createPositionValidation = validation((getSchema) => ({

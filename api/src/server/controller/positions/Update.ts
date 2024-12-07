@@ -2,14 +2,13 @@ import { Request, RequestHandler, Response } from "express";
 import * as yup from "yup";
 import { validation } from "../../shared/middlewares";
 import { StatusCodes } from "http-status-codes";
+import { IPosition } from "../../database/models";
 
 interface IParamProps {
   id?: number;
 }
 
-interface IBodyProps {
-  name: string;
-}
+interface IBodyProps extends Omit<IPosition, "id"> {}
 
 // Validação para o body da requisação
 export const updatePositionByIdValidation = validation((getSchema) => ({
