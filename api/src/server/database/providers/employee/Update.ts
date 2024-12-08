@@ -4,11 +4,11 @@ import { Knex } from "../../knex";
 
 export const updateById = async (
   id: number,
-  funcionario: Omit<IEmployee, "id">
+  employee: Omit<IEmployee, "id">
 ): Promise<void | Error> => {
   try {
     const [{ count }] = await Knex(ETableNames.employees)
-      .where("id", "=", funcionario.positionId)
+      .where("id", "=", employee.positionId)
       .count<[{ count: number }]>("* as count");
 
     if (count === 0) {
@@ -16,7 +16,7 @@ export const updateById = async (
     }
 
     const result = await Knex(ETableNames.employees)
-      .update(funcionario)
+      .update(employee)
       .where("id", "=", id);
 
     if (result > 0) return;
