@@ -4,6 +4,7 @@ import { validation } from "../../shared/middlewares";
 import { StatusCodes } from "http-status-codes";
 import { Knex } from "../../database/knex";
 import { IPosition } from "../../database/models";
+import { PositionsProviders } from "../../database/providers/position";
 interface IBodyProps extends Omit<IPosition, "id"> {}
 
 // Validação para o body da requisação
@@ -20,7 +21,16 @@ export const createPosition = async (
   req: Request<{}, {}, IBodyProps>,
   res: Response
 ) => {
-  console.log(req.body);
+  const result = await PositionsProviders.create(req.body);
 
-  res.status(StatusCodes.CREATED).json(1);
+  if (result instanceof Error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      errors: {
+        default: result.message,
+      },
+    });
+    return;
+  }
+  res.status(StatusCodes.CREATED).json(result);
+  return;
 };

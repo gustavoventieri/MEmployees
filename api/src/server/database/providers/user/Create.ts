@@ -1,0 +1,25 @@
+import { IUser } from "../../models";
+import { Knex } from "../../knex";
+import { ETableNames } from "../../ETableNames";
+//import { PasswordCrypto } from "../../../shared/services";
+export const create = async (
+  usuario: Omit<IUser, "id">
+): Promise<number | Error> => {
+  try {
+    //const hashedPassword = await PasswordCrypto.hashPassword(usuario.senha);
+
+    //const [result] = await Knex(ETableNames.user)
+    //  .insert({ ...usuario, senha: hashedPassword })
+    //  .returning("id");
+    //
+    //if (typeof result === "object") {
+    //  return result.id;
+    //} else if (typeof result === "number") {
+    //  return result;
+    //}
+
+    return new Error("Erro ao cadastrar");
+  } catch (error) {
+    return new Error("Erro ao cadastrar o registro");
+  }
+};
