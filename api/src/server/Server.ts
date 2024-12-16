@@ -9,4 +9,5 @@ server.use(express.json());
 // Utiliando as rotas no servidor
 server.use(router);
 
+// Exporta todas as rotas
 export { server };

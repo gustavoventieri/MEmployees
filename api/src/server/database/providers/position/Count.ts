@@ -1,6 +1,7 @@
 import { ETableNames } from "../../ETableNames";
 import { Knex } from "../../knex";
 
+// Função que conta quantos cargos há no banco de dados
 export const count = async (filter = ""): Promise<number | Error> => {
   try {
     const [{ count }] = await Knex(ETableNames.position)

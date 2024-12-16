@@ -1,6 +1,8 @@
 import { IEmployee } from "../../models";
 import { Knex } from "../../knex";
 import { ETableNames } from "../../ETableNames";
+
+// Função que cria um funcionario
 export const create = async (
   employee: Omit<IEmployee, "id">
 ): Promise<number | Error> => {

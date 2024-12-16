@@ -2,6 +2,8 @@ import { IUser } from "../../models";
 import { Knex } from "../../knex";
 import { ETableNames } from "../../ETableNames";
 //import { PasswordCrypto } from "../../../shared/services";
+
+// Função que cria um usuario
 export const create = async (
   usuario: Omit<IUser, "id">
 ): Promise<number | Error> => {

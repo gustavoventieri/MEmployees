@@ -2,6 +2,7 @@ import { ETableNames } from "../../ETableNames";
 import { IPosition } from "../../models";
 import { Knex } from "../../knex";
 
+// Função que seleciona todos os cargos
 export const getAll = async (
   page: number,
   limit: number,

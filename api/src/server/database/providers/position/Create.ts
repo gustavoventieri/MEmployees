@@ -2,7 +2,7 @@ import { ETableNames } from "../../ETableNames";
 import { Knex } from "../../knex";
 import { IPosition } from "../../models";
 
-// metodo que provê a criação de um cargo
+// Função que provê a criação de um cargo
 export const create = async (
   position: Omit<IPosition, "id">
 ): Promise<Number | Error> => {

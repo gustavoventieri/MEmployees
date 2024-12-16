@@ -2,6 +2,7 @@ import { ETableNames } from "../../ETableNames";
 import { IEmployee } from "../../models";
 import { Knex } from "../../knex";
 
+// Função que atualiza um funcionario por ID
 export const updateById = async (
   id: number,
   employee: Omit<IEmployee, "id">

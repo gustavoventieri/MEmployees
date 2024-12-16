@@ -1,6 +1,7 @@
 import { ETableNames } from "../../ETableNames";
 import { Knex } from "../../knex";
 
+// Função que exclui um funcionario
 export const deleteById = async (id: number): Promise<void | Error> => {
   try {
     const result = await Knex(ETableNames.employees).where("id", "=", id).del();

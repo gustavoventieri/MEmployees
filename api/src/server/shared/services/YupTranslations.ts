@@ -1,5 +1,6 @@
 import { setLocale } from "yup";
 
+// Traduz os erros mais comuns de validação para português
 setLocale({
   mixed: {
     required: "Este campo é obrigatório",

@@ -2,6 +2,7 @@ import { ETableNames } from "../../ETableNames";
 import { IPosition } from "../../models";
 import { Knex } from "../../knex";
 
+// Função que seleciona um funcionario por ID
 export const getById = async (id: number): Promise<IPosition | Error> => {
   try {
     const result = await Knex(ETableNames.employees)

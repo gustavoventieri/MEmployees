@@ -2,6 +2,7 @@ import { ETableNames } from "../../ETableNames";
 import { IPosition } from "../../models";
 import { Knex } from "../../knex";
 
+// Função que atualiza um cargo por ID
 export const updateById = async (
   id: number,
   position: Omit<IPosition, "id">

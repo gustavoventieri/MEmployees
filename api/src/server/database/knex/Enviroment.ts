@@ -1,6 +1,8 @@
 import { Knex } from "knex";
 import path from "path";
 
+// Estados do banco de dados
+
 export const development: Knex.Config = {
   client: "sqlite3",
   useNullAsDefault: true,
