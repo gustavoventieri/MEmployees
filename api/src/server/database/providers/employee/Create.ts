@@ -7,18 +7,18 @@ export const create = async (
   employee: Omit<IEmployee, "id">
 ): Promise<number | Error> => {
   try {
-    const [{ count }] = await Knex(ETableNames.employees)
+    const [{ count }] = await Knex(ETableNames.position)
       .where("id", "=", employee.positionId)
       .count<[{ count: number }]>("* as count");
 
     if (count === 0) {
-      return new Error("A cidade usada não foi encontrada");
+      return new Error("O cargo usada não foi encontrado");
     }
 
     const [result] = await Knex(ETableNames.employees)
       .insert(employee)
       .returning("id");
-
+    
     if (typeof result === "object") {
       return result.id;
     } else if (typeof result === "number") {

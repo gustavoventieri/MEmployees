@@ -42,27 +42,27 @@ router.delete(
 // Rotas de Funcionario
 
 router.get(
-  "/funcionarios",
+  "/employee",
   EmployeesControler.getAllEmployeesValidation,
   EmployeesControler.getAllEmployees
 );
 router.post(
-  "/funcionarios",
+  "/employee",
   EmployeesControler.createEmployeeValidation,
   EmployeesControler.createEmployee
 );
 router.get(
-  "/funcionarios/:id",
+  "/employee/:id",
   EmployeesControler.getEmployeeByIdValidation,
   EmployeesControler.getEmployeeById
 );
 router.put(
-  "/funcionarios/:id",
+  "/employee/:id",
   EmployeesControler.updateEmployeeByIdValidation,
   EmployeesControler.updateEmployeeById
 );
 router.delete(
-  "/funcionarios/:id",
+  "/employee/:id",
   EmployeesControler.deleteEmployeeByIdValidation,
   EmployeesControler.deleteEmployeeById
 );

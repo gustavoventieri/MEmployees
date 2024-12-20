@@ -8,12 +8,12 @@ export const updateById = async (
   employee: Omit<IEmployee, "id">
 ): Promise<void | Error> => {
   try {
-    const [{ count }] = await Knex(ETableNames.employees)
+    const [{ count }] = await Knex(ETableNames.position)
       .where("id", "=", employee.positionId)
       .count<[{ count: number }]>("* as count");
 
     if (count === 0) {
-      return new Error("A cidade usada não foi encontrada");
+      return new Error("O cargo usado não foi encontrado");
     }
 
     const result = await Knex(ETableNames.employees)
