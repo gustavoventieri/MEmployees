@@ -9,7 +9,7 @@ export const getByEmail = async (email: string): Promise<IUser | Error> => {
       .select("*")
       .where("email", "=", email)
       .first();
-
+    console.log(result);
     if (result) return result;
 
     return new Error("Registro não encontrado");
