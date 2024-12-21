@@ -1,3 +1,3 @@
-export * from "./positions";
-export * from "./employees";
-export * from "./users";
+export * from "./position";
+export * from "./employee";
+export * from "./user";

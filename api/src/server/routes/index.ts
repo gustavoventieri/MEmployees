@@ -67,4 +67,8 @@ router.delete(
   EmployeesControler.deleteEmployeeById
 );
 
+// Rotas de Usuario
+router.post("/signin", UsersControler.signInValidation, UsersControler.signIn);
+router.post("/signup", UsersControler.signUpValidation, UsersControler.signUp);
+
 export { router };

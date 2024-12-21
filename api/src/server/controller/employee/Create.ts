@@ -2,9 +2,9 @@ import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import * as yup from "yup";
 
-import { EmployeesProviders } from "./../../database/providers/employee";
+import { EmployeesProviders } from "../../database/providers/employee";
 import { validation } from "../../shared/middlewares";
-import { IEmployee } from "./../../database/models";
+import { IEmployee } from "../../database/models";
 
 interface IBodyProps extends Omit<IEmployee, "id"> {}
 

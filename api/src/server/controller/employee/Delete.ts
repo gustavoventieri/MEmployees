@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
 
-import { EmployeesProviders } from "./../../database/providers/employee";
+import { EmployeesProviders } from "../../database/providers/employee";
 import { validation } from "../../shared/middlewares";
 
 interface IParamProps {
