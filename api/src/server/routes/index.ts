@@ -9,6 +9,12 @@ import { isAuthenticated } from "../shared/middlewares";
 
 const router = Router();
 
+// Rotas de Padrão
+router.get("/", (_, res) => {
+  res.send("Olá, DEV!");
+  return;
+});
+
 // Rotas de Cargos
 router.post(
   "/position",
@@ -78,7 +84,7 @@ router.delete(
   EmployeesControler.deleteEmployeeById
 );
 
-// Rotas de Usuari    o
+// Rotas de Usuario
 router.post("/signin", UsersControler.signInValidation, UsersControler.signIn);
 router.post("/signup", UsersControler.signUpValidation, UsersControler.signUp);
 
