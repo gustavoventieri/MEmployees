@@ -30,7 +30,7 @@ export const getAllPosition = async (
     req.query.page || 1,
     req.query.limit || 7,
     req.query.filter || "",
-    Number(req.query.id)
+    Number(req.query.id || 0)
   );
   const count = await PositionsProviders.count(req.query.filter);
   console.log("usuario", req.headers.userId);

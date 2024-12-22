@@ -8,7 +8,7 @@
   "scripts": {
     "start": "ts-node-dev ./src/index.ts",
     "test": "jest",
-    "production": "node ./build/index.js",
+    "production": "node ./build/src/index.js",
     "preproduction": "tsc",
     "rollback": "knex --knexfile ./src/server/database/knex/Enviroment.ts migrate:rollback",
     "migrate": "knex --knexfile ./src/server/database/knex/Enviroment.ts migrate:latest",
