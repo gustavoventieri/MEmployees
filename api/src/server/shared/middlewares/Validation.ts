@@ -19,14 +19,14 @@ type TGetAllSchemas = (getSchema: TGetSchema) => Partial<TAllSchemas>;
 // Tipagem para uma função de validação que usa os schemas de validação
 type TValidation = (getAllSchemas: TGetAllSchemas) => RequestHandler;
 
-// Funcção que faz a validação passadas por parametro
+// Função que valida os schemas passados por parametro
 export const validation: TValidation =
   (getAllSchemas) => async (req, res, next) => {
     const schemas = getAllSchemas((schema) => schema);
 
     const errorsResult: Record<string, Record<string, string>> = {};
 
-    // Perform validation for each schema
+    // Perfoma cada schema passado
     Object.entries(schemas).forEach(([key, schema]) => {
       try {
         schema.validateSync(req[key as TProperty], { abortEarly: false });
@@ -43,7 +43,7 @@ export const validation: TValidation =
       }
     });
 
-    // If no validation errors, proceed to the next middleware
+    // Caso nenhum erro na validação, o fluxo segue
     if (Object.entries(errorsResult).length === 0) {
       return next();
     }
