@@ -36,12 +36,12 @@ export const test: Knex.Config = {
 };
 
 export const production: Knex.Config = {
-  client: 'pg',
+  client: "pg",
   migrations: {
-    directory: path.resolve(__dirname, '..', 'migrations'),
+    directory: path.resolve(__dirname, "..", "migrations"),
   },
   seeds: {
-    directory: path.resolve(__dirname, '..', 'seeds'),
+    directory: path.resolve(__dirname, "..", "seeds"),
   },
   connection: {
     host: process.env.DATABASE_HOST,
