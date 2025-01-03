@@ -19,12 +19,10 @@ export const useDrawerContext = () => {
   return useContext(DrawerContext);
 };
 
-interface IDrawerProviderProps {
+interface IDrawerProps {
   children: React.ReactNode;
 }
-export const DrawerProvider: React.FC<IDrawerProviderProps> = ({
-  children,
-}) => {
+export const DrawerProvider: React.FC<IDrawerProps> = ({ children }) => {
   const [drawerOptions, setDrawerOptions] = useState<IDrawerOption[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

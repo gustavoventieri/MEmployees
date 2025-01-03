@@ -1,19 +1,33 @@
+import { useEffect } from "react";
 import { Button } from "@mui/material";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useDrawerContext } from "../shared/contexts";
+import { useAppThemeContext, useDrawerContext } from "../shared/contexts";
 
 export const AppRoutes = () => {
-  const { toggleDrawerOpen } = useDrawerContext();
+  const { toggleDrawerOpen, setDrawerOptions } = useDrawerContext();
+  const { toggleTheme } = useAppThemeContext();
+
+  useEffect(() => {
+    setDrawerOptions([
+      {
+        icon: "home",
+        path: "/",
+        label: "Home Page",
+      },
+      {
+        icon: "star",
+        path: "/bata",
+        label: "Home Page",
+      },
+    ]);
+  }, []);
+
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={toggleDrawerOpen}
-          >
+          <Button variant="contained" color="primary" onClick={toggleTheme}>
             Switch Theme
           </Button>
         }
