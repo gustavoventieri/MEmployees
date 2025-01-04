@@ -6,6 +6,7 @@ import {
   UsersControler,
 } from "../controller";
 import { isAuthenticated } from "../shared/middlewares";
+import { LoginController } from "../controller/login";
 
 const router = Router();
 
@@ -85,7 +86,11 @@ router.delete(
 );
 
 // Rotas de Usuario
-router.post("/signin", UsersControler.signInValidation, UsersControler.signIn);
-router.post("/signup", UsersControler.signUpValidation, UsersControler.signUp);
+router.post(
+  "/signin",
+  LoginController.signInValidation,
+  LoginController.signIn
+);
+router.post("/user", UsersControler.signUpValidation, UsersControler.signUp);
 
 export { router };
