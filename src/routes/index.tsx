@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { Button } from "@mui/material";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useAppThemeContext, useDrawerContext } from "../shared/contexts";
+import { useDrawerContext } from "../shared/contexts";
+import { Dashboard } from "../pages";
 
 export const AppRoutes = () => {
-  const { toggleDrawerOpen, setDrawerOptions } = useDrawerContext();
-  const { toggleTheme } = useAppThemeContext();
+  const { setDrawerOptions } = useDrawerContext();
 
+  // Informações para a lista do drawer
   useEffect(() => {
     setDrawerOptions([
       {
@@ -20,18 +20,11 @@ export const AppRoutes = () => {
         label: "Home Page",
       },
     ]);
-  }, []);
+  }, [setDrawerOptions]);
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <Button variant="contained" color="primary" onClick={toggleTheme}>
-            Switch Theme
-          </Button>
-        }
-      />
+      <Route path="/" element={<Dashboard />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

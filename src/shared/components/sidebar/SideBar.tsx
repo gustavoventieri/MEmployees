@@ -21,6 +21,8 @@ interface IListItemLinkProps {
   label: string;
   onClick: (() => void) | undefined;
 }
+
+// Lista de links para navegação no drawer
 const ListItemLink: React.FC<IListItemLinkProps> = ({
   to,
   icon,
@@ -29,9 +31,11 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({
 }) => {
   const navigate = useNavigate();
 
+  // Resolve o caminho e verifica se há uma correspondência parcial com a rota
   const resolvedPath = useResolvedPath(to);
   const match = useMatch({ path: resolvedPath.pathname, end: false });
 
+  // Quando um link é pressionado, o usuario é direcionado
   const handleClick = () => {
     navigate(to);
     onClick?.();

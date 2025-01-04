@@ -24,22 +24,25 @@ export const useAppThemeContext = () => {
 interface IAppThemeProviderProps {
   children: React.ReactNode;
 }
+
+// Contexto dos temas do sistema
 export const AppThemeProvider: React.FC<IAppThemeProviderProps> = ({
   children,
 }) => {
   const [themeName, setThemeName] = useState<"light" | "dark">("light");
 
+  // Funçaõ que alterna entre os temas do sistema
   const toggleTheme = useCallback(() => {
     setThemeName((oldThemeName) =>
       oldThemeName === "light" ? "dark" : "light"
     );
   }, []);
 
-  const theme = useMemo(() => {
-    if (themeName === "light") return LightTheme;
-
-    return DarkTheme;
-  }, [themeName]);
+  // Função que recalcula o tema do momento
+  const theme = useMemo(
+    () => (themeName === "light" ? LightTheme : DarkTheme),
+    [themeName]
+  );
 
   return (
     <ThemeContext.Provider value={{ themeName, toggleTheme }}>
