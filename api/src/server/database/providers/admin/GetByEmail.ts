@@ -1,15 +1,14 @@
 import { ETableNames } from "../../ETableNames";
-import { IUser } from "../../models";
+import { IAdmin } from "../../models";
 import { Knex } from "../../knex";
 
 // Função que busca por um usuario por email
-export const getByEmail = async (email: string): Promise<IUser | Error> => {
+export const getByEmail = async (email: string): Promise<IAdmin | Error> => {
   try {
-    const result = await Knex(ETableNames.user)
+    const result = await Knex(ETableNames.admin)
       .select("*")
       .where("email", "=", email)
       .first();
-    console.log(result);
     if (result) return result;
 
     return new Error("Registro não encontrado");
