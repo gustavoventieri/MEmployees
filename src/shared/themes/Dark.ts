@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material";
-import { blue, cyan } from "@mui/material/colors";
+import { blue, cyan, grey } from "@mui/material/colors";
 
 export const DarkTheme = createTheme({
   palette: {
@@ -21,10 +21,14 @@ export const DarkTheme = createTheme({
     },
     text: {
       primary: "#ffffff", // Cor do texto principal (pode ser alterada aqui)
-      secondary: "#757575", // Cor do texto secundário
     },
     action: {
       active: "#fffff", // Cor dos ícones quando estão ativos (ou em hover)
+    },
+  },
+  typography: {
+    allVariants: {
+      color: "white",
     },
   },
 });

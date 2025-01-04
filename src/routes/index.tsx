@@ -14,11 +14,6 @@ export const AppRoutes = () => {
         path: "/",
         label: "Home Page",
       },
-      {
-        icon: "star",
-        path: "/bata",
-        label: "Home Page",
-      },
     ]);
   }, [setDrawerOptions]);
 

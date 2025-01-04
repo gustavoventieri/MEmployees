@@ -19,5 +19,8 @@ export const LightTheme = createTheme({
       paper: "#ffffff",
       default: "#f7f6f3",
     },
+    action: {
+      active: "#00000", // Cor dos ícones quando estão ativos (ou em hover)
+    },
   },
 });

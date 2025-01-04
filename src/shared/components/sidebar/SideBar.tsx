@@ -14,6 +14,7 @@ import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 import { Box } from "@mui/system";
 
 import { useDrawerContext } from "../../contexts";
+import { useAppThemeContext } from "../../contexts";
 
 interface IListItemLinkProps {
   to: string;
@@ -59,6 +60,7 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
   const smDown = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { isDrawerOpen, drawerOptions, toggleDrawerOpen } = useDrawerContext();
+  const { toggleTheme, themeName } = useAppThemeContext();
 
   return (
     <>
@@ -101,6 +103,20 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
               ))}
             </List>
           </Box>
+        </Box>
+        <Box margin="0" padding="0">
+          <List component="nav">
+            <ListItemButton onClick={toggleTheme}>
+              <ListItemIcon>
+                {themeName === "light" ? (
+                  <Icon>light_mode</Icon>
+                ) : (
+                  <Icon>dark_mode</Icon>
+                )}
+              </ListItemIcon>
+              <ListItemText primary="Switch Theme" />
+            </ListItemButton>
+          </List>
         </Box>
       </Drawer>
 

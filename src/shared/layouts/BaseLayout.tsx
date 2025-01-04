@@ -7,15 +7,22 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { ReactNode } from "react";
 import { useDrawerContext } from "../contexts";
 
 interface IBaseLayoutProps {
   title: string;
+  toolsBar?: ReactNode;
   children: React.ReactNode;
 }
-export const BaseLayout: React.FC<IBaseLayoutProps> = ({ children, title }) => {
+export const BaseLayout: React.FC<IBaseLayoutProps> = ({
+  children,
+  toolsBar,
+  title,
+}) => {
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+  const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+
   const { toggleDrawerOpen } = useDrawerContext();
   const theme = useTheme();
   return (
@@ -24,7 +31,7 @@ export const BaseLayout: React.FC<IBaseLayoutProps> = ({ children, title }) => {
         padding={1}
         display="flex"
         alignItems="center"
-        height={theme.spacing(12)}
+        height={theme.spacing(smDown ? 6 : mdDown ? 8 : 12)}
       >
         {smDown && (
           <IconButton onClick={toggleDrawerOpen}>
@@ -32,11 +39,21 @@ export const BaseLayout: React.FC<IBaseLayoutProps> = ({ children, title }) => {
           </IconButton>
         )}
 
-        <Typography>{title}</Typography>
+        <Typography
+          variant={smDown ? "h5" : mdDown ? "h4" : "h3"}
+          overflow="hidden"
+          whiteSpace="nowrap"
+          textOverflow="ellipsis"
+          marginLeft={1}
+        >
+          {title}
+        </Typography>
       </Box>
-      <Box>Barra de Ferramentas</Box>
 
-      <Box>{children}</Box>
+      {toolsBar && <Box>{toolsBar}</Box>}
+      <Box flex={1} overflow="auto">
+        {children}
+      </Box>
     </Box>
   );
 };
