@@ -1,5 +1,5 @@
 import { ETableNames } from "../../ETableNames";
-import { IUser } from "../../models";
+import { IAdmin } from "../../models";
 import { Knex } from "../../knex";
 
 // Função que seleciona todos os cargos
@@ -8,9 +8,9 @@ export const getAll = async (
   limit: number,
   filter: string,
   id = 0
-): Promise<IUser[] | Error> => {
+): Promise<IAdmin[] | Error> => {
   try {
-    const result = await Knex(ETableNames.user)
+    const result = await Knex(ETableNames.admin)
       .select("*")
       .where("id", Number(id))
       .orWhere("name", "like", `%${filter}%`)
@@ -18,7 +18,7 @@ export const getAll = async (
       .limit(limit);
 
     if (id > 0 && result.every((item) => item.id !== id)) {
-      const resultById = await Knex(ETableNames.user)
+      const resultById = await Knex(ETableNames.admin)
         .select("*")
         .where("id", "=", id)
         .first();

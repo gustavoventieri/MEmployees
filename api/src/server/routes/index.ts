@@ -85,12 +85,43 @@ router.delete(
   EmployeesControler.deleteEmployeeById
 );
 
-// Rotas de Usuario
+// Rotas de Login
 router.post(
   "/signin",
   LoginController.signInValidation,
   LoginController.signIn
 );
-router.post("/user", UsersControler.signUpValidation, UsersControler.signUp);
+
+// Rotas de Usuario
+router.post(
+  "/user",
+  isAuthenticated,
+  UsersControler.signUpValidation,
+  UsersControler.signUp
+);
+router.delete(
+  "/user/:id",
+  isAuthenticated,
+  UsersControler.deleteUserByIdValidation,
+  UsersControler.deleteUserById
+);
+router.get(
+  "/user",
+  isAuthenticated,
+  UsersControler.getAllUsersValidation,
+  UsersControler.getAllUsers
+);
+router.get(
+  "/user/:id",
+  isAuthenticated,
+  UsersControler.getUserByIdValidation,
+  UsersControler.getUserById
+);
+router.put(
+  "/user/:id",
+  isAuthenticated,
+  UsersControler.updateUserByIdValidation,
+  UsersControler.updateUserById
+);
 
 export { router };

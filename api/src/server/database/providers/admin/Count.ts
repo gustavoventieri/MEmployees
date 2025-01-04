@@ -1,10 +1,10 @@
 import { ETableNames } from "../../ETableNames";
 import { Knex } from "../../knex";
 
-// Função que conta quantos users há no banco de dados
+// Função que conta quantos admins há no banco de dados
 export const count = async (filter = ""): Promise<number | Error> => {
   try {
-    const [{ count }] = await Knex(ETableNames.user)
+    const [{ count }] = await Knex(ETableNames.admin)
       .where("name", "like", `%${filter}%`)
       .count<[{ count: number }]>("* as count");
 
