@@ -10,7 +10,7 @@ export const updateById = async (
 ): Promise<void | Error> => {
   try {
     const hashPassword = await PasswordServices.hashPassword(admin.password);
-    const result = await Knex(ETableNames.user)
+    const result = await Knex(ETableNames.admin)
       .update({ ...admin, password: hashPassword })
       .where("id", "=", id);
 

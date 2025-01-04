@@ -7,14 +7,16 @@ import {
 } from "../controller";
 import { isAuthenticated } from "../shared/middlewares";
 import { LoginController } from "../controller/login";
+import { AdminControllers } from "../controller/admin";
 
 const router = Router();
 
-// Rotas de Padrão
-router.get("/", (_, res) => {
-  res.send("Olá, DEV!");
-  return;
-});
+// Rotas de Login
+router.post(
+  "/signin",
+  LoginController.signInValidation,
+  LoginController.signIn
+);
 
 // Rotas de Cargos
 router.post(
@@ -85,13 +87,6 @@ router.delete(
   EmployeesControler.deleteEmployeeById
 );
 
-// Rotas de Login
-router.post(
-  "/signin",
-  LoginController.signInValidation,
-  LoginController.signIn
-);
-
 // Rotas de Usuario
 router.post(
   "/user",
@@ -122,6 +117,38 @@ router.put(
   isAuthenticated,
   UsersControler.updateUserByIdValidation,
   UsersControler.updateUserById
+);
+
+// Rotas de Admin
+router.post(
+  "/admin",
+  isAuthenticated,
+  AdminControllers.signUpValidation,
+  AdminControllers.signUp
+);
+router.get(
+  "/admin",
+  isAuthenticated,
+  AdminControllers.getAllAdminsValidation,
+  AdminControllers.getAllAdmins
+);
+router.get(
+  "/admin/:id",
+  isAuthenticated,
+  AdminControllers.getAdminByIdValidation,
+  AdminControllers.getAdminById
+);
+router.delete(
+  "/admin/:id",
+  isAuthenticated,
+  AdminControllers.deleteAdminByIdValidation,
+  AdminControllers.deleteAdminById
+);
+router.put(
+  "/admin/:id",
+  isAuthenticated,
+  AdminControllers.updateAdminByIdValidation,
+  AdminControllers.updateAdminById
 );
 
 export { router };
