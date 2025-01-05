@@ -1,11 +1,13 @@
 import { Enviroment } from "../../environment";
 import { api } from "../axios";
+import { IPosition } from "../position/PositionServices";
 
-interface IEmployeeList {
+export interface IEmployeeList {
   id: number;
   email: string;
   positionId: number;
   name: string;
+  position?: IPosition | Error;
 }
 
 interface IEmployeeDetails {
@@ -27,7 +29,12 @@ const getAll = async (
   try {
     const urlRelativa = `/employee?_page=${page}&_limit=${Enviroment.LIMITE_LINHAS}&name_like=${filter}`;
 
-    const { data, headers } = await api.get(urlRelativa);
+    const { data, headers } = await api.get(urlRelativa, {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjA1MTg3MCwiZXhwIjoxNzM2MTM4MjcwfQ.EGobrC_GpZSpi05yxBk1tjhNNIXWyDfqqykZ_D9hPXI",
+      },
+    });
 
     if (data) {
       return {
@@ -48,52 +55,65 @@ const getAll = async (
 };
 
 const getById = async (id: number): Promise<IEmployeeDetails | Error> => {
-    try {
-      const { data } = await api.get(`/employee/${id}`);
-  
-      if (data) {
-        return data;
-      }
-  
-      return new Error('Erro ao consultar o registro.');
-    } catch (error) {
-      console.error(error);
-      return new Error((error as { message: string }).message || 'Erro ao consultar o registro.');
-    }
-  };
+  try {
+    const { data } = await api.get(`/employee/${id}`);
 
-  const create = async (dados: Omit<IEmployeeDetails, 'id'>): Promise<number | Error> => {
-    try {
-      const { data } = await api.post<IEmployeeDetails>('/employee', dados);
-  
-      if (data) {
-        return data.id;
-      }
-  
-      return new Error('Erro ao criar o registro.');
-    } catch (error) {
-      console.error(error);
-      return new Error((error as { message: string }).message || 'Erro ao criar o registro.');
+    if (data) {
+      return data;
     }
-  };
 
-  const updateById = async (id: number, dados: IEmployeeDetails): Promise<void | Error> => {
-    try {
-      await api.put(`/employee/${id}`, dados);
-    } catch (error) {
-      console.error(error);
-      return new Error((error as { message: string }).message || 'Erro ao atualizar o registro.');
-    }
-  };
+    return new Error("Erro ao consultar o registro.");
+  } catch (error) {
+    console.error(error);
+    return new Error(
+      (error as { message: string }).message || "Erro ao consultar o registro."
+    );
+  }
+};
 
-  const deleteById = async (id: number): Promise<void | Error> => {
-    try {
-      await api.delete(`/employee/${id}`);
-    } catch (error) {
-      console.error(error);
-      return new Error((error as { message: string }).message || 'Erro ao apagar o registro.');
+const create = async (
+  dados: Omit<IEmployeeDetails, "id">
+): Promise<number | Error> => {
+  try {
+    const { data } = await api.post<IEmployeeDetails>("/employee", dados);
+
+    if (data) {
+      return data.id;
     }
-  };
+
+    return new Error("Erro ao criar o registro.");
+  } catch (error) {
+    console.error(error);
+    return new Error(
+      (error as { message: string }).message || "Erro ao criar o registro."
+    );
+  }
+};
+
+const updateById = async (
+  id: number,
+  dados: IEmployeeDetails
+): Promise<void | Error> => {
+  try {
+    await api.put(`/employee/${id}`, dados);
+  } catch (error) {
+    console.error(error);
+    return new Error(
+      (error as { message: string }).message || "Erro ao atualizar o registro."
+    );
+  }
+};
+
+const deleteById = async (id: number): Promise<void | Error> => {
+  try {
+    await api.delete(`/employee/${id}`);
+  } catch (error) {
+    console.error(error);
+    return new Error(
+      (error as { message: string }).message || "Erro ao apagar o registro."
+    );
+  }
+};
 
 export const employeeService = {
   getAll,

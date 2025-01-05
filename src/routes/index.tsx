@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useDrawerContext } from "../shared/contexts";
-import { Dashboard } from "../pages";
+import { Dashboard, PositionList } from "../pages";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
@@ -11,15 +11,21 @@ export const AppRoutes = () => {
     setDrawerOptions([
       {
         icon: "home",
-        path: "/",
-        label: "Home Page",
+        path: "/home",
+        label: "Home",
+      },
+      {
+        icon: "people",
+        path: "/employee",
+        label: "Employees",
       },
     ]);
   }, [setDrawerOptions]);
 
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/home" element={<Dashboard />} />
+      <Route path="/employee" element={<PositionList />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
