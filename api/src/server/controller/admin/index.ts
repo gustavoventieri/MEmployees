@@ -3,8 +3,8 @@ import * as getAll from "./GetAll";
 import * as getById from "./GetById";
 import * as updateById from "./Update";
 import * as deleteByID from "./Delete";
-// Exportando todas as controllers de position
-export const UsersControler = {
+// Exportando todas as controllers de admin
+export const AdminControllers = {
   ...create,
   ...getAll,
   ...getById,
