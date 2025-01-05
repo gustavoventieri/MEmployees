@@ -1,6 +1,6 @@
 import { Enviroment } from "../../environment";
 import { api } from "../axios";
-import { IPosition } from "../position/PositionServices";
+import { IPosition, PositionService } from "../position/PositionServices";
 
 export interface IEmployeeList {
   id: number;
@@ -27,7 +27,7 @@ const getAll = async (
   filter = ""
 ): Promise<TEmployyeCount | Error> => {
   try {
-    const urlRelativa = `/employee?_page=${page}&_limit=${Enviroment.LIMITE_LINHAS}&name_like=${filter}`;
+    const urlRelativa = `/employee?_page=${page}&_limit=${Enviroment.LIMITE_LINHAS}&filter=${filter}`;
 
     const { data, headers } = await api.get(urlRelativa, {
       headers: {
@@ -36,9 +36,18 @@ const getAll = async (
       },
     });
 
+    const employees = await Promise.all(
+      data.map(async (employee: IEmployeeList) => {
+        // Obtém o cargo do funcionário
+        const position = await PositionService.getById(employee.positionId);
+        // Retorna o funcionário com o cargo
+        return { ...employee, position };
+      })
+    );
+
     if (data) {
       return {
-        data,
+        data: employees,
         totalCount: Number(
           headers["x-total-count"] || Enviroment.LIMITE_LINHAS
         ),

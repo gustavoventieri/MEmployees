@@ -1,10 +1,12 @@
 import {
-  Button,
+  colors,
+  LinearProgress,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
 } from "@mui/material";
@@ -17,46 +19,43 @@ import {
   IEmployeeList,
 } from "../../shared/services/employee/EmployeeServices";
 import { useDebounce } from "../../shared/hooks";
-import { PositionService } from "../../shared/services/position/PositionServices";
+import { Enviroment } from "../../shared/environment";
+import { useAppThemeContext } from "../../shared/contexts";
 
 export const PositionList: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
 
+  const { themeName } = useAppThemeContext();
   const [rows, setRows] = useState<IEmployeeList[]>([]);
   const [count, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const search = useMemo(() => {
-    return searchParams.get("search") || "";
+    const query = searchParams.get("busca") || "";
+    console.log("Current search term:", query); // Log para depuração
+    return query;
   }, [searchParams]);
 
   useEffect(() => {
+    console.log("Updated search params:", searchParams.toString()); // Log para verificar
+
     setIsLoading(true);
     debounce(() => {
+      console.log("Searching for:", search); // Log para verificar a busca
+
       employeeService.getAll(1, search).then(async (result) => {
         setIsLoading(false);
 
         if (result instanceof Error) {
           alert(result.message);
         } else {
-          const employeesWithPosition = await Promise.all(
-            result.data.map(async (employee) => {
-              const position = await PositionService.getById(
-                employee.positionId
-              );
-
-              return { ...employee, position: position };
-            })
-          );
-
-          console.log(employeesWithPosition);
-          setRows(employeesWithPosition);
+          setRows(result.data);
           setCount(result.totalCount);
         }
       });
     });
-  }, [search]);
+  }, [searchParams]); // Log para verificar a mudança de searchParams
 
   return (
     <BaseLayout
@@ -66,8 +65,8 @@ export const PositionList: React.FC = () => {
           showSearchInput
           showNewButton
           searchText={search}
-          changeTextOnSearchInput={(text) =>
-            setSearchParams({ search: text }, { replace: true })
+          changeTextOnSearchInput={(texto) =>
+            setSearchParams({ busca: texto }, { replace: true })
           }
         />
       }
@@ -80,10 +79,10 @@ export const PositionList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Ações</TableCell>
-              <TableCell>Nome</TableCell>
+              <TableCell>Actions</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Cargo</TableCell>
+              <TableCell>Position</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,6 +95,25 @@ export const PositionList: React.FC = () => {
               </TableRow>
             ))}
           </TableBody>
+          {count === 0 &&
+            !isLoading &&
+            (themeName === "light" ? (
+              <caption>{Enviroment.LISTAGEM_VAZIA}</caption>
+            ) : (
+              <caption style={{ color: "white" }}>
+                {Enviroment.LISTAGEM_VAZIA}
+              </caption>
+            ))}
+
+          <TableFooter>
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <LinearProgress variant="indeterminate" />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableFooter>
         </Table>
       </TableContainer>
     </BaseLayout>
