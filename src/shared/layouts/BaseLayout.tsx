@@ -8,7 +8,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { ReactNode } from "react";
-import { useDrawerContext } from "../contexts";
+import { useAppThemeContext, useDrawerContext } from "../contexts";
 
 interface IBaseLayoutProps {
   title: string;
@@ -25,6 +25,7 @@ export const BaseLayout: React.FC<IBaseLayoutProps> = ({
 
   const { toggleDrawerOpen } = useDrawerContext();
   const theme = useTheme();
+  const { themeName } = useAppThemeContext();
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={1}>
       <Box
@@ -35,7 +36,11 @@ export const BaseLayout: React.FC<IBaseLayoutProps> = ({
       >
         {smDown && (
           <IconButton onClick={toggleDrawerOpen}>
-            <Icon>menu</Icon>
+            {themeName === "light" ? (
+              <Icon>menu</Icon>
+            ) : (
+              <Icon sx={{ color: 'white' }}>menu</Icon>
+            )}
           </IconButton>
         )}
 

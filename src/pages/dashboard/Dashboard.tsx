@@ -1,13 +1,16 @@
 import { ToolsBar } from "../../shared/components";
+import { DetailsTools } from "../../shared/components/detailstools/DetailsTool";
 import { BaseLayout } from "../../shared/layouts";
 
 export const Dashboard = () => {
   return (
     <BaseLayout
       title="Dashboard"
-      toolsBar={<ToolsBar showSearchInput showNewButton />}
+      toolsBar={
+        <DetailsTools showSaveAndExitButtonLoading showPreviousButton={false} />
+      }
     >
-      Tesa
+      .
     </BaseLayout>
   );
 };

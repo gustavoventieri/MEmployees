@@ -41,15 +41,17 @@ export const ToolsBar: React.FC<IToolsBarProps> = ({
         />
       )}
       <Box flex={1} display="flex" justifyContent="end">
-        <Button
-          variant="contained"
-          color="primary"
-          disableElevation
-          endIcon={<Icon>add</Icon>}
-          onClick={handleClinkNew}
-        >
-          {newButtonText}
-        </Button>
+        {showNewButton && (
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            endIcon={<Icon>add</Icon>}
+            onClick={handleClinkNew}
+          >
+            {newButtonText}
+          </Button>
+        )}
       </Box>
     </Box>
   );
