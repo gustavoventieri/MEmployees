@@ -27,20 +27,19 @@ const getAll = async (
   filter = ""
 ): Promise<TEmployyeCount | Error> => {
   try {
-    const urlRelativa = `/employee?_page=${page}&_limit=${Enviroment.LIMITE_LINHAS}&filter=${filter}`;
+    const urlRelativa = `/employee?page=${page}&limit=${Enviroment.LIMITE_LINHAS}&filter=${filter}`;
 
     const { data, headers } = await api.get(urlRelativa, {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjA1MTg3MCwiZXhwIjoxNzM2MTM4MjcwfQ.EGobrC_GpZSpi05yxBk1tjhNNIXWyDfqqykZ_D9hPXI",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjI2MDU1OSwiZXhwIjoxNzM2MzQ2OTU5fQ.qwhclmXPP5WX0QD1nvFEjocotRJDiP4pR3_urjLRUa0",
       },
     });
 
     const employees = await Promise.all(
       data.map(async (employee: IEmployeeList) => {
-        // Obtém o cargo do funcionário
         const position = await PositionService.getById(employee.positionId);
-        // Retorna o funcionário com o cargo
+
         return { ...employee, position };
       })
     );

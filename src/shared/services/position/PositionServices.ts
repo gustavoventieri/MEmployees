@@ -11,7 +11,7 @@ const getById = async (id: number): Promise<IPosition | Error> => {
     const { data } = await api.get(`/position/${id}`, {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjA1MTg3MCwiZXhwIjoxNzM2MTM4MjcwfQ.EGobrC_GpZSpi05yxBk1tjhNNIXWyDfqqykZ_D9hPXI",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjI2MDU1OSwiZXhwIjoxNzM2MzQ2OTU5fQ.qwhclmXPP5WX0QD1nvFEjocotRJDiP4pR3_urjLRUa0",
       },
     });
 

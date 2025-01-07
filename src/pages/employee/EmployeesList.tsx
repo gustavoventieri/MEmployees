@@ -1,7 +1,8 @@
 import {
-  colors,
   LinearProgress,
+  Pagination,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -32,19 +33,21 @@ export const PositionList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const search = useMemo(() => {
-    const query = searchParams.get("busca") || "";
-    console.log("Current search term:", query); // Log para depuração
+    const query = searchParams.get("search") || "";
+
+    return query;
+  }, [searchParams]);
+
+  const page = useMemo(() => {
+    const query = Number(searchParams.get("page") || "1");
+
     return query;
   }, [searchParams]);
 
   useEffect(() => {
-    console.log("Updated search params:", searchParams.toString()); // Log para verificar
-
     setIsLoading(true);
     debounce(() => {
-      console.log("Searching for:", search); // Log para verificar a busca
-
-      employeeService.getAll(1, search).then(async (result) => {
+      employeeService.getAll(page, search).then(async (result) => {
         setIsLoading(false);
 
         if (result instanceof Error) {
@@ -55,7 +58,7 @@ export const PositionList: React.FC = () => {
         }
       });
     });
-  }, [searchParams]); // Log para verificar a mudança de searchParams
+  }, [search, page]);
 
   return (
     <BaseLayout
@@ -66,7 +69,7 @@ export const PositionList: React.FC = () => {
           showNewButton
           searchText={search}
           changeTextOnSearchInput={(texto) =>
-            setSearchParams({ busca: texto }, { replace: true })
+            setSearchParams({ search: texto, page: "1" }, { replace: true })
           }
         />
       }
@@ -110,6 +113,25 @@ export const PositionList: React.FC = () => {
               <TableRow>
                 <TableCell colSpan={4}>
                   <LinearProgress variant="indeterminate" />
+                </TableCell>
+              </TableRow>
+            )}
+            {count > 0 && count > Enviroment.LIMITE_LINHAS && (
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <Stack>
+                    <Pagination
+                      page={page}
+                      count={Math.ceil(count / Enviroment.LIMITE_LINHAS)}
+                      color="primary"
+                      onChange={(_, newPage) => {
+                        setSearchParams(
+                          { search, page: newPage.toString() },
+                          { replace: true }
+                        );
+                      }}
+                    ></Pagination>
+                  </Stack>
                 </TableCell>
               </TableRow>
             )}
