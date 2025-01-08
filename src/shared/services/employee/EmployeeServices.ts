@@ -32,7 +32,7 @@ const getAll = async (
     const { data, headers } = await api.get(urlRelativa, {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjI2MDU1OSwiZXhwIjoxNzM2MzQ2OTU5fQ.qwhclmXPP5WX0QD1nvFEjocotRJDiP4pR3_urjLRUa0",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
       },
     });
 
@@ -64,7 +64,12 @@ const getAll = async (
 
 const getById = async (id: number): Promise<IEmployeeDetails | Error> => {
   try {
-    const { data } = await api.get(`/employee/${id}`);
+    const { data } = await api.get(`/employee/${id}`, {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
+      },
+    });
 
     if (data) {
       return data;
@@ -114,7 +119,12 @@ const updateById = async (
 
 const deleteById = async (id: number): Promise<void | Error> => {
   try {
-    await api.delete(`/employee/${id}`);
+    await api.delete(`/employee/${id}`, {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
+      },
+    });
   } catch (error) {
     console.error(error);
     return new Error(

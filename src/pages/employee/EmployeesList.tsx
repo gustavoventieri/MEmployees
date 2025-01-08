@@ -1,4 +1,6 @@
 import {
+  Icon,
+  IconButton,
   LinearProgress,
   Pagination,
   Paper,
@@ -10,10 +12,11 @@ import {
   TableFooter,
   TableHead,
   TableRow,
+  TextField,
 } from "@mui/material";
 import { ToolsBar } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import {
   employeeService,
@@ -22,15 +25,22 @@ import {
 import { useDebounce } from "../../shared/hooks";
 import { Enviroment } from "../../shared/environment";
 import { useAppThemeContext } from "../../shared/contexts";
+import CryptoJS from "crypto-js";
 
 export const PositionList: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
+  const navigate = useNavigate();
 
   const { themeName } = useAppThemeContext();
   const [rows, setRows] = useState<IEmployeeList[]>([]);
   const [count, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const secretKey = Enviroment.PASSDECRYPT;
+
+  const encryptData = (data: number) => {
+    return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
+  };
 
   const search = useMemo(() => {
     const query = searchParams.get("search") || "";
@@ -60,6 +70,23 @@ export const PositionList: React.FC = () => {
     });
   }, [search, page]);
 
+  const handleDelete = (id: number) => {
+    /* eslint-disable-next-line no-restricted-globals */
+    if (confirm("Realmente deseja apagar?")) {
+      employeeService.deleteById(id).then((result) => {
+        if (result instanceof Error) {
+          return alert(result.message);
+        } else {
+          setRows((oldRows) => [
+            ...oldRows.filter((oldRow) => oldRow.id != id),
+          ]);
+          alert("Registro apagado com sucesso!");
+          window.location.reload();
+        }
+      });
+    }
+  };
+
   return (
     <BaseLayout
       title="List Employees"
@@ -68,6 +95,7 @@ export const PositionList: React.FC = () => {
           showSearchInput
           showNewButton
           searchText={search}
+          handleClinkNew={() => navigate("/employee/new")}
           changeTextOnSearchInput={(texto) =>
             setSearchParams({ search: texto, page: "1" }, { replace: true })
           }
@@ -89,14 +117,33 @@ export const PositionList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>Ações</TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{row.position?.name}</TableCell>
-              </TableRow>
-            ))}
+            {!isLoading &&
+              rows.map((row) => {
+                const encryptedId = encryptData(row.id);
+                const encodedId = encodeURIComponent(encryptedId);
+
+                return (
+                  <TableRow key={row.id}>
+                    <TableCell>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDelete(row.id)}
+                      >
+                        <Icon>delete</Icon>
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => navigate(`/employee/edit/${encodedId}`)}
+                      >
+                        <Icon>edit</Icon>
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.email}</TableCell>
+                    <TableCell>{row.position?.name}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
           {count === 0 &&
             !isLoading &&
