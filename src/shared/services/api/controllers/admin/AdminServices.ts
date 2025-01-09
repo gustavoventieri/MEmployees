@@ -15,7 +15,7 @@ export interface IAdminList {
   password: string;
 }
 
-type TPositionCount = {
+type TAdminCount = {
   data: IAdminList[];
   totalCount: number;
 };
@@ -24,7 +24,7 @@ const getAll = async (
   page = 1,
   filter = "",
   id = 0
-): Promise<TPositionCount | Error> => {
+): Promise<TAdminCount | Error> => {
   try {
     const urlRelativa = `/admin?page=${page}&limit=${Enviroment.LIMITE_LINHAS}&filter=${filter}&id=${id}`;
 
@@ -52,12 +52,7 @@ const create = async (
   dados: Omit<IAdminDetails, "id">
 ): Promise<number | Error> => {
   try {
-    const { data } = await api.post<IAdminDetails>("/position", dados, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    const { data } = await api.post<IAdminDetails>("/admin", dados);
 
     if (typeof data === "number") {
       return data;
@@ -73,12 +68,7 @@ const create = async (
 
 const getById = async (id: number): Promise<IAdminDetails | Error> => {
   try {
-    const { data } = await api.get(`/position/${id}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    const { data } = await api.get(`/admin/${id}`);
 
     if (data) {
       return data;
@@ -98,12 +88,7 @@ const updateById = async (
   dados: IAdminDetails
 ): Promise<void | Error> => {
   try {
-    await api.put(`/position/${id}`, dados, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    await api.put(`/admin/${id}`, dados);
   } catch (error) {
     console.error(error);
     return new Error(
@@ -114,12 +99,7 @@ const updateById = async (
 
 const deleteById = async (id: number): Promise<void | Error> => {
   try {
-    await api.delete(`/position/${id}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    await api.delete(`/admin/${id}`);
   } catch (error) {
     console.error(error);
     return new Error(
@@ -128,7 +108,7 @@ const deleteById = async (id: number): Promise<void | Error> => {
   }
 };
 
-export const PositionService = {
+export const AdminService = {
   getById,
   updateById,
   create,
