@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { AuthService } from "../services/auth/AuthService";
+import { useNavigate } from "react-router-dom";
 
 interface IAuthContextData {
   logout: () => void;
@@ -25,6 +26,7 @@ interface IAuthProviderProps {
 export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   // Inicializando o estado accessToken como string | null
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // UseEffect para recuperar o token do localStorage
   useEffect(() => {
@@ -35,22 +37,30 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   }, []);
 
   // Função de login
-  const handleLogin = useCallback(async (email: string, password: string) => {
-    const result = await AuthService.auth({ email, password });
-    if (result instanceof Error) {
-      return result.message; // Retorna a mensagem de erro
-    } else {
-      // Salva o token no localStorage e no estado
-      localStorage.setItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN, result.accessToken);
-      setAccessToken(result.accessToken);
-    }
-  }, []);
+  const handleLogin = useCallback(
+    async (email: string, password: string) => {
+      const result = await AuthService.auth({ email, password });
+      if (result instanceof Error) {
+        return result.message; // Retorna a mensagem de erro
+      } else {
+        // Salva o token no localStorage e no estado
+        localStorage.setItem(
+          LOCAL_STORAGE_KEY__ACCESS_TOKEN,
+          result.accessToken
+        );
+        setAccessToken(result.accessToken);
+        navigate("/dashboard");
+      }
+    },
+    [navigate]
+  );
 
   // Função de logout
   const handleLogout = useCallback(() => {
     localStorage.removeItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN);
     setAccessToken(null); // Define o estado como null após o logout
-  }, []);
+    navigate("/");
+  }, [navigate]);
 
   // Verifica se o usuário está autenticado
   const isAuthenticated = useMemo(() => !!accessToken, [accessToken]);
