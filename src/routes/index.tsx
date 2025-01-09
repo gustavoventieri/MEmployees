@@ -10,6 +10,8 @@ import {
 } from "../pages";
 import { CreateEmployee } from "../pages/employee/CreateEmployee";
 import EditPosition from "../pages/position/EditPosition";
+import { Login } from "../pages/login/Login";
+import { ProtectedRoute } from "../shared/services/auth/ProtectedRoutes";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
@@ -19,13 +21,18 @@ export const AppRoutes = () => {
     setDrawerOptions([
       {
         icon: "home",
-        path: "/home",
-        label: "Home",
+        path: "/dashboard",
+        label: "Dashboard",
       },
       {
         icon: "people",
-        path: "/employee",
-        label: "Employees",
+        path: "/user",
+        label: "User",
+      },
+      {
+        icon: "people",
+        path: "/admin",
+        label: "Admin",
       },
       {
         icon: "business_center",
@@ -34,29 +41,27 @@ export const AppRoutes = () => {
       },
       {
         icon: "people",
-        path: "/position",
-        label: "Admin",
-      },
-      {
-        icon: "people",
-        path: "/position",
-        label: "User",
+        path: "/employee",
+        label: "Employees",
       },
     ]);
   }, [setDrawerOptions]);
 
   return (
     <Routes>
-      <Route path="/home" element={<Dashboard />} />
-      <Route path="/employee" element={<EmployeesList />} />
-      <Route path="/employee/new" element={<CreateEmployee />} />
-      <Route path="/employee/edit/:id" element={<EditEmployee />} />
+      <Route path="/" element={<Login />} />
 
-      <Route path="/position" element={<PositionList />} />
-      <Route path="/position/new" element={<CreatePosition />} />
-      <Route path="/position/edit/:id" element={<EditPosition />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/employee" element={<EmployeesList />} />
+        <Route path="/employee/new" element={<CreateEmployee />} />
+        <Route path="/employee/edit/:id" element={<EditEmployee />} />
 
-      <Route path="*" element={<Navigate to="/home" />} />
+        <Route path="/position" element={<PositionList />} />
+        <Route path="/position/new" element={<CreatePosition />} />
+        <Route path="/position/edit/:id" element={<EditPosition />} />
+        <Route path="*" element={<Navigate to="/dashboard" />} />
+      </Route>
     </Routes>
   );
 };
