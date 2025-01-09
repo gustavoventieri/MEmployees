@@ -48,12 +48,7 @@ const create = async (
   dados: Omit<IPositionDetails, "id">
 ): Promise<number | Error> => {
   try {
-    const { data } = await api.post<IPositionDetails>("/position", dados, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    const { data } = await api.post<IPositionDetails>("/position", dados);
 
     if (typeof data === "number") {
       return data;
@@ -69,12 +64,7 @@ const create = async (
 
 const getById = async (id: number): Promise<IPositionDetails | Error> => {
   try {
-    const { data } = await api.get(`/position/${id}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    const { data } = await api.get(`/position/${id}`);
 
     if (data) {
       return data;
@@ -94,12 +84,7 @@ const updateById = async (
   dados: IPositionDetails
 ): Promise<void | Error> => {
   try {
-    await api.put(`/position/${id}`, dados, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    await api.put(`/position/${id}`, dados);
   } catch (error) {
     console.error(error);
     return new Error(
@@ -110,12 +95,7 @@ const updateById = async (
 
 const deleteById = async (id: number): Promise<void | Error> => {
   try {
-    await api.delete(`/position/${id}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    await api.delete(`/position/${id}`);
   } catch (error) {
     console.error(error);
     return new Error(
