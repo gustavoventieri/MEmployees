@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+
 import { useDrawerContext } from "../shared/contexts";
 import {
   CreatePosition,
@@ -11,7 +12,7 @@ import {
 import { CreateEmployee } from "../pages/employee/CreateEmployee";
 import EditPosition from "../pages/position/EditPosition";
 import { Login } from "../pages/login/Login";
-import { ProtectedRoute } from "../shared/services/auth/ProtectedRoutes";
+import { ProtectedRoute } from "../shared/services/api/controllers/auth/ProtectedRoutes";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
@@ -27,12 +28,12 @@ export const AppRoutes = () => {
       {
         icon: "people",
         path: "/user",
-        label: "User",
+        label: "Users",
       },
       {
         icon: "people",
         path: "/admin",
-        label: "Admin",
+        label: "Admins",
       },
       {
         icon: "business_center",

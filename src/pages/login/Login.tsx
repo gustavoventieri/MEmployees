@@ -10,8 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import * as yup from "yup";
+
 import { useAuthContext } from "../../shared/contexts";
-import { useNavigate } from "react-router-dom";
 
 const loginSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -19,15 +19,13 @@ const loginSchema = yup.object().shape({
 });
 
 export const Login = () => {
-  const { isAuthenticated, login } = useAuthContext();
+  const { login } = useAuthContext();
 
   const [isLoading, setIsLoading] = useState(false);
-
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = () => {
     setIsLoading(true);

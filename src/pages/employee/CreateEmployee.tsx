@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import CryptoJS from "crypto-js";
+import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
+import * as yup from "yup";
 
 import { BaseLayout } from "../../shared/layouts";
 import { DetailsTools } from "../../shared/components";
 import { useNavigate } from "react-router-dom";
 import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
-import { employeeService } from "../../shared/services/employee/EmployeeServices";
-import * as yup from "yup";
+import { employeeService } from "../../shared/services/api/controllers/employee/EmployeeServices";
 import { Enviroment } from "../../shared/environment";
-import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
-import { AutoComplete } from "./components/AutoComplete";
+import { AutoCompletePosition } from "./components/AutoComplete";
 
 interface IFormData {
   name: string;
@@ -128,7 +128,7 @@ export const CreateEmployee: React.FC = () => {
 
             <Grid container item direction="row">
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-              <AutoComplete isExternalLoading={isLoading} />
+                <AutoCompletePosition isExternalLoading={isLoading} />
               </Grid>
             </Grid>
           </Grid>

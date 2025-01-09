@@ -25,7 +25,7 @@ import { BaseLayout } from "../../shared/layouts";
 import {
   IPositionList,
   PositionService,
-} from "../../shared/services/position/PositionServices";
+} from "../../shared/services/api/controllers/position/PositionServices";
 
 export const PositionList: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();

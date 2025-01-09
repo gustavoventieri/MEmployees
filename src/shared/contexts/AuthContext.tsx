@@ -6,8 +6,9 @@ import {
   useMemo,
   useState,
 } from "react";
-import { AuthService } from "../services/auth/AuthService";
 import { useNavigate } from "react-router-dom";
+
+import { AuthService } from "../services/api/controllers/auth/AuthService";
 
 interface IAuthContextData {
   logout: () => void;

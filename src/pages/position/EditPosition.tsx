@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import * as yup from "yup";
+import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
+
 import { Enviroment } from "../../shared/environment";
 import { BaseLayout } from "../../shared/layouts";
 import { DetailsTools } from "../../shared/components";
 import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
-import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
 import {
   IPositionList,
   PositionService,
-} from "../../shared/services/position/PositionServices";
+} from "../../shared/services/api/controllers/position/PositionServices";
 
 interface IFormData {
   name: string;

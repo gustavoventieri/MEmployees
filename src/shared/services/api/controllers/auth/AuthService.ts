@@ -1,4 +1,4 @@
-import { api } from "../axios";
+import { api } from "../../config/axios";
 
 interface IAuth {
   accessToken: string;

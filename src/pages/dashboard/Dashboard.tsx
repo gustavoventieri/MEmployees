@@ -1,10 +1,10 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+
 import { ToolsBar } from "../../shared/components";
-import { DetailsTools } from "../../shared/components/detailstools/DetailsTool";
 import { BaseLayout } from "../../shared/layouts";
 import { useEffect, useState } from "react";
-import { PositionService } from "../../shared/services/position/PositionServices";
-import { employeeService } from "../../shared/services/employee/EmployeeServices";
+import { PositionService } from "../../shared/services/api/controllers/position/PositionServices";
+import { employeeService } from "../../shared/services/api/controllers/employee/EmployeeServices";
 
 export const Dashboard = () => {
   const [isLoadingPositions, setIsLoadingPositions] = useState(true);

@@ -108,8 +108,8 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
                     />
                   )) ||
                   (role === "User" &&
-                    drawerOption.label !== "Admin" &&
-                    drawerOption.label !== "User" && (
+                    drawerOption.label !== "Admins" &&
+                    drawerOption.label !== "Users" && (
                       <ListItemLink
                         to={drawerOption.path}
                         key={drawerOption.path}
@@ -134,6 +134,7 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
               </ListItemIcon>
               <ListItemText primary="Switch Theme" />
             </ListItemButton>
+
             <ListItemButton onClick={logout}>
               <ListItemIcon>
                 <Icon>logout</Icon>

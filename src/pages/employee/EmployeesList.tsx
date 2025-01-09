@@ -20,7 +20,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   employeeService,
   IEmployeeList,
-} from "../../shared/services/employee/EmployeeServices";
+} from "../../shared/services/api/controllers/employee/EmployeeServices";
 import { useDebounce } from "../../shared/hooks";
 import { Enviroment } from "../../shared/environment";
 import { useAppThemeContext } from "../../shared/contexts";

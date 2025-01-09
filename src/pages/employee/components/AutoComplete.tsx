@@ -3,7 +3,7 @@ import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 
 import { useDebounce } from "../../../shared/hooks";
 import { useField } from "@unform/core";
-import { PositionService } from "../../../shared/services/position/PositionServices";
+import { PositionService } from "../../../shared/services/api/controllers/position/PositionServices";
 
 type TAutoCompleteOption = {
   id: number;
@@ -13,7 +13,7 @@ type TAutoCompleteOption = {
 interface IAutoCompletePositionProps {
   isExternalLoading?: boolean;
 }
-export const AutoComplete: React.FC<IAutoCompletePositionProps> = ({
+export const AutoCompletePosition: React.FC<IAutoCompletePositionProps> = ({
   isExternalLoading = false,
 }) => {
   const { fieldName, registerField, defaultValue, error, clearError } =
@@ -26,7 +26,7 @@ export const AutoComplete: React.FC<IAutoCompletePositionProps> = ({
 
   const [opcoes, setOpcoes] = useState<TAutoCompleteOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [busca, setBusca] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     registerField({
@@ -40,7 +40,7 @@ export const AutoComplete: React.FC<IAutoCompletePositionProps> = ({
     setIsLoading(true);
 
     debounce(() => {
-      PositionService.getAll(1, busca).then((result) => {
+      PositionService.getAll(1, search, selectedId).then((result) => {
         setIsLoading(false);
 
         if (result instanceof Error) {
@@ -57,7 +57,7 @@ export const AutoComplete: React.FC<IAutoCompletePositionProps> = ({
         }
       });
     });
-  }, [busca]);
+  }, [search, selectedId]);
 
   const autoCompleteSelectedOption = useMemo(() => {
     if (!selectedId) return null;
@@ -79,10 +79,10 @@ export const AutoComplete: React.FC<IAutoCompletePositionProps> = ({
       loading={isLoading}
       disabled={isExternalLoading}
       value={autoCompleteSelectedOption}
-      onInputChange={(_, newValue) => setBusca(newValue)}
+      onInputChange={(_, newValue) => setSearch(newValue)}
       onChange={(_, newValue) => {
         setSelectedId(newValue?.id);
-        setBusca("");
+        setSearch("");
         clearError();
       }}
       popupIcon={

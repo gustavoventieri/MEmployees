@@ -1,6 +1,9 @@
-import { Enviroment } from "../../environment";
-import { api } from "../axios";
-import { IPositionDetails, PositionService } from "../position/PositionServices";
+import { Enviroment } from "../../../../environment";
+import { api } from "../../config/index";
+import {
+  IPositionDetails,
+  PositionService,
+} from "../position/PositionServices";
 
 export interface IEmployeeList {
   id: number;

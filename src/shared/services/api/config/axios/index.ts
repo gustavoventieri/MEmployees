@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Enviroment } from "../../environment";
+import { Enviroment } from "../../../../environment";
 
 // Criando a instância do axios com baseURL configurada
 const api = axios.create({
