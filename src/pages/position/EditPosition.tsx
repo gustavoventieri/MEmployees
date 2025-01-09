@@ -5,29 +5,24 @@ import * as yup from "yup";
 import { Enviroment } from "../../shared/environment";
 import { BaseLayout } from "../../shared/layouts";
 import { DetailsTools } from "../../shared/components";
-import {
-  employeeService,
-  IEmployeeList,
-} from "../../shared/services/employee/EmployeeServices";
 import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
 import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
-import { AutoComplete } from "./components/AutoComplete";
+import {
+  IPositionList,
+  PositionService,
+} from "../../shared/services/position/PositionServices";
 
 interface IFormData {
   name: string;
-  email: string;
-  positionId: number;
 }
 
 const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
-  positionId: yup.number().required(),
-  email: yup.string().required().email(),
-  name: yup.string().required().min(3),
+  name: yup.string().required().max(150).min(3),
 });
 
-export const EditEmployee: React.FC = () => {
+export const EditPosition: React.FC = () => {
   const { id = "nova" } = useParams<"id">();
-  const [employeeId, setEmployeeId] = useState<number | null>(null);
+  const [positionId, setPositionId] = useState<number | null>(null);
   const secretKey = Enviroment.PASSDECRYPT;
   const navigate = useNavigate();
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
@@ -39,13 +34,13 @@ export const EditEmployee: React.FC = () => {
       const decodedId = decodeURIComponent(id);
       const bytes = CryptoJS.AES.decrypt(decodedId, secretKey);
       const decryptedId = bytes.toString(CryptoJS.enc.Utf8);
-      setEmployeeId(Number(decryptedId));
+      setPositionId(Number(decryptedId));
 
       if (decryptedId !== null) {
-        employeeService.getById(Number(decryptedId)).then((result) => {
+        PositionService.getById(Number(decryptedId)).then((result) => {
           if (result instanceof Error) {
             alert(result.message);
-            navigate("/employee");
+            navigate("/position");
           } else {
             setLoading(false);
             formRef.current?.setData(result);
@@ -55,27 +50,25 @@ export const EditEmployee: React.FC = () => {
     }
   }, [id]);
 
-  const handleUpdate = (dados: Omit<IEmployeeList, "id">) => {
+  const handleUpdate = (dados: Omit<IPositionList, "id">) => {
     formValidationSchema
       .validate(dados, { abortEarly: false })
       .then((dadosValidados) => {
         setLoading(true);
-        employeeService
-          .updateById(Number(employeeId), {
-            id: Number(employeeId),
-            ...dadosValidados,
-          })
-          .then((result) => {
-            setLoading(false);
-            if (result instanceof Error) {
-              alert(result.message);
-              navigate("/employee");
-            } else {
-              if (isSaveAndClose()) {
-                navigate("/employee");
-              }
+        PositionService.updateById(Number(positionId), {
+          id: Number(positionId),
+          ...dadosValidados,
+        }).then((result) => {
+          setLoading(false);
+          if (result instanceof Error) {
+            alert(result.message);
+            navigate("/position");
+          } else {
+            if (isSaveAndClose()) {
+              navigate("/position");
             }
-          });
+          }
+        });
       })
       .catch((errors: yup.ValidationError) => {
         const validationErrors: IVFormErrors = {};
@@ -93,12 +86,12 @@ export const EditEmployee: React.FC = () => {
   const handleDelete = (id: number) => {
     /* eslint-disable-next-line no-restricted-globals */
     if (confirm("Realmente deseja apagar?")) {
-      employeeService.deleteById(id).then((result) => {
+      PositionService.deleteById(id).then((result) => {
         if (result instanceof Error) {
           return alert(result.message);
         } else {
           alert("Registro apagado com sucesso!");
-          navigate("/employee");
+          navigate("/position");
         }
       });
     }
@@ -106,15 +99,15 @@ export const EditEmployee: React.FC = () => {
 
   return (
     <BaseLayout
-      title="Edit Employee"
+      title="Edit Position"
       toolsBar={
         <DetailsTools
           showDeleteButton
           showSaveAndExitButton
           showNewButton
-          handleClickOnPrevious={() => navigate("/employee")}
-          handleClickOnNew={() => navigate("/employee/new")}
-          handleClickOnDelete={() => handleDelete(Number(employeeId))}
+          handleClickOnPrevious={() => navigate("/position")}
+          handleClickOnNew={() => navigate("/position/new")}
+          handleClickOnDelete={() => handleDelete(Number(positionId))}
           handleClickOnSave={save}
           handleClickOnSaveAndExit={saveAndClose}
         />
@@ -155,23 +148,6 @@ export const EditEmployee: React.FC = () => {
                 />
               </Grid>
             </Grid>
-
-            <Grid container item direction="row">
-              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                <VTextField
-                  fullWidth
-                  disabled={isLoading}
-                  label="Email"
-                  name="email"
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container item direction="row">
-              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                <AutoComplete isExternalLoading={isLoading} />
-              </Grid>
-            </Grid>
           </Grid>
         </Box>
       </VForm>
@@ -179,4 +155,4 @@ export const EditEmployee: React.FC = () => {
   );
 };
 
-export default EditEmployee;
+export default EditPosition;

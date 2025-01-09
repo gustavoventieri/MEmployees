@@ -17,23 +17,23 @@ import CryptoJS from "crypto-js";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
-import {
-  employeeService,
-  IEmployeeList,
-} from "../../shared/services/employee/EmployeeServices";
 import { useDebounce } from "../../shared/hooks";
 import { Enviroment } from "../../shared/environment";
 import { useAppThemeContext } from "../../shared/contexts";
 import { ToolsBar } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
+import {
+  IPositionList,
+  PositionService,
+} from "../../shared/services/position/PositionServices";
 
-export const EmployeesList: React.FC = () => {
+export const PositionList: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
   const navigate = useNavigate();
 
   const { themeName } = useAppThemeContext();
-  const [rows, setRows] = useState<IEmployeeList[]>([]);
+  const [rows, setRows] = useState<IPositionList[]>([]);
   const [count, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const secretKey = Enviroment.PASSDECRYPT;
@@ -57,7 +57,7 @@ export const EmployeesList: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      employeeService.getAll(page, search).then(async (result) => {
+      PositionService.getAll(page, search).then(async (result) => {
         setIsLoading(false);
 
         if (result instanceof Error) {
@@ -73,7 +73,7 @@ export const EmployeesList: React.FC = () => {
   const handleDelete = (id: number) => {
     /* eslint-disable-next-line no-restricted-globals */
     if (confirm("Realmente deseja apagar?")) {
-      employeeService.deleteById(id).then((result) => {
+      PositionService.deleteById(id).then((result) => {
         if (result instanceof Error) {
           return alert(result.message);
         } else {
@@ -89,13 +89,13 @@ export const EmployeesList: React.FC = () => {
 
   return (
     <BaseLayout
-      title="List Employees"
+      title="List Positions"
       toolsBar={
         <ToolsBar
           showSearchInput
           showNewButton
           searchText={search}
-          handleClinkNew={() => navigate("/employee/new")}
+          handleClinkNew={() => navigate("/position/new")}
           changeTextOnSearchInput={(texto) =>
             setSearchParams({ search: texto, page: "1" }, { replace: true })
           }
@@ -112,8 +112,6 @@ export const EmployeesList: React.FC = () => {
             <TableRow>
               <TableCell width={100}>Actions</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Position</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -133,14 +131,13 @@ export const EmployeesList: React.FC = () => {
                       </IconButton>
                       <IconButton
                         size="small"
-                        onClick={() => navigate(`/employee/edit/${encodedId}`)}
+                        onClick={() => navigate(`/position/edit/${encodedId}`)}
                       >
                         <Icon>edit</Icon>
                       </IconButton>
                     </TableCell>
+
                     <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.email}</TableCell>
-                    <TableCell>{row.position?.name}</TableCell>
                   </TableRow>
                 );
               })}
@@ -158,14 +155,14 @@ export const EmployeesList: React.FC = () => {
           <TableFooter>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={3}>
                   <LinearProgress variant="indeterminate" />
                 </TableCell>
               </TableRow>
             )}
             {count > 0 && count > Enviroment.LIMITE_LINHAS && (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={3}>
                   <Stack>
                     <Pagination
                       page={page}

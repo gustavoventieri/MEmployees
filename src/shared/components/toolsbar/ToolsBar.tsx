@@ -1,6 +1,5 @@
 import { Box, Button, Icon, Paper, TextField, useTheme } from "@mui/material";
 import React from "react";
-import { useAppThemeContext } from "../../contexts";
 
 interface IToolsBarProps {
   searchText?: string;
@@ -19,7 +18,6 @@ export const ToolsBar: React.FC<IToolsBarProps> = ({
   showNewButton = false,
   handleClinkNew,
 }) => {
-  const { themeName } = useAppThemeContext();
   const theme = useTheme();
   return (
     <Box

@@ -33,7 +33,7 @@ export const getAllPosition = async (
     Number(req.query.id || 0)
   );
   const count = await PositionsProviders.count(req.query.filter);
-  console.log("usuario", req.headers.userId);
+  
 
   if (result instanceof Error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

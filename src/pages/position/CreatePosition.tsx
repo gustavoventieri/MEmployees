@@ -5,25 +5,21 @@ import { BaseLayout } from "../../shared/layouts";
 import { DetailsTools } from "../../shared/components";
 import { useNavigate } from "react-router-dom";
 import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
-import { employeeService } from "../../shared/services/employee/EmployeeServices";
+
 import * as yup from "yup";
 import { Enviroment } from "../../shared/environment";
 import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
-import { AutoComplete } from "./components/AutoComplete";
+import { PositionService } from "../../shared/services/position/PositionServices";
 
 interface IFormData {
   name: string;
-  email: string;
-  positionId: number;
 }
 
 const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
-  positionId: yup.number().required(),
-  email: yup.string().required().email(),
-  name: yup.string().required().min(3),
+  name: yup.string().required().max(150).min(3),
 });
 
-export const CreateEmployee: React.FC = () => {
+export const CreatePosition: React.FC = () => {
   const navigate = useNavigate();
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
   const [isLoading, setLoading] = useState(false);
@@ -37,7 +33,7 @@ export const CreateEmployee: React.FC = () => {
     formValidationSchema
       .validate(dados, { abortEarly: false })
       .then((dadosValidados) => {
-        employeeService.create(dadosValidados).then((result) => {
+        PositionService.create(dadosValidados).then((result) => {
           setLoading(false);
           if (result instanceof Error) {
             alert(result.message);
@@ -45,9 +41,9 @@ export const CreateEmployee: React.FC = () => {
             const encryptedId = encryptData(result);
             const encodedId = encodeURIComponent(encryptedId);
             if (isSaveAndClose()) {
-              navigate("/employee");
+              navigate("/position");
             } else {
-              navigate(`/employee/edit/${encodedId}`);
+              navigate(`/position/edit/${encodedId}`);
             }
           }
         });
@@ -73,7 +69,7 @@ export const CreateEmployee: React.FC = () => {
           showDeleteButton={false}
           showNewButton={false}
           showSaveAndExitButton
-          handleClickOnPrevious={() => navigate("/employee")}
+          handleClickOnPrevious={() => navigate("/position")}
           handleClickOnSave={save}
           handleClickOnSaveAndExit={saveAndClose}
         />
@@ -112,23 +108,6 @@ export const CreateEmployee: React.FC = () => {
                   label="Name"
                   name="name"
                 />
-              </Grid>
-            </Grid>
-
-            <Grid container item direction="row">
-              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                <VTextField
-                  fullWidth
-                  disabled={isLoading}
-                  label="Email"
-                  name="email"
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container item direction="row">
-              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-              <AutoComplete isExternalLoading={isLoading} />
               </Grid>
             </Grid>
           </Grid>

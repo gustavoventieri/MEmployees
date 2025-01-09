@@ -1,13 +1,13 @@
 import { Enviroment } from "../../environment";
 import { api } from "../axios";
-import { IPosition, PositionService } from "../position/PositionServices";
+import { IPositionDetails, PositionService } from "../position/PositionServices";
 
 export interface IEmployeeList {
   id: number;
   email: string;
   positionId: number;
   name: string;
-  position?: IPosition | Error;
+  position?: IPositionDetails | Error;
 }
 
 interface IEmployeeDetails {
@@ -29,12 +29,7 @@ const getAll = async (
   try {
     const urlRelativa = `/employee?page=${page}&limit=${Enviroment.LIMITE_LINHAS}&filter=${filter}`;
 
-    const { data, headers } = await api.get(urlRelativa, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    const { data, headers } = await api.get(urlRelativa);
 
     const employees = await Promise.all(
       data.map(async (employee: IEmployeeList) => {
@@ -64,12 +59,7 @@ const getAll = async (
 
 const getById = async (id: number): Promise<IEmployeeDetails | Error> => {
   try {
-    const { data } = await api.get(`/employee/${id}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    const { data } = await api.get(`/employee/${id}`);
 
     if (data) {
       return data;
@@ -88,12 +78,7 @@ const create = async (
   dados: Omit<IEmployeeDetails, "id">
 ): Promise<number | Error> => {
   try {
-    const { data } = await api.post<IEmployeeDetails>("/employee", dados, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    const { data } = await api.post<IEmployeeDetails>("/employee", dados);
 
     if (typeof data === "number") {
       return data;
@@ -112,12 +97,7 @@ const updateById = async (
   dados: IEmployeeDetails
 ): Promise<void | Error> => {
   try {
-    await api.put(`/employee/${id}`, dados, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    await api.put(`/employee/${id}`, dados);
   } catch (error) {
     console.error(error);
     return new Error(
@@ -128,12 +108,7 @@ const updateById = async (
 
 const deleteById = async (id: number): Promise<void | Error> => {
   try {
-    await api.delete(`/employee/${id}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
-      },
-    });
+    await api.delete(`/employee/${id}`);
   } catch (error) {
     console.error(error);
     return new Error(
