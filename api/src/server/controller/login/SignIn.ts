@@ -13,7 +13,7 @@ interface IBodyProps extends Omit<IUser, "id" | "name"> {}
 export const signInValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(
     yup.object().shape({
-      password: yup.string().required().min(6),
+      password: yup.string().required().min(8),
       email: yup.string().required().email().min(5),
     })
   ),
@@ -57,7 +57,7 @@ export const signIn = async (
     }
 
     // Gera o token para o administrador
-    const accessTokenAdmin = JWTService.sign({ uid: admin.id });
+    const accessTokenAdmin = JWTService.sign({ uid: admin.id, role: "Admin" });
     if (accessTokenAdmin === "JWT_SECRET_NOT_FOUND") {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         errors: {
@@ -86,7 +86,7 @@ export const signIn = async (
   }
 
   // Gera o token para o usuário
-  const accessTokenUser = JWTService.sign({ uid: user.id });
+  const accessTokenUser = JWTService.sign({ uid: user.id, role: "User" });
   if (accessTokenUser === "JWT_SECRET_NOT_FOUND") {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {
