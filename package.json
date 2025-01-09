@@ -12,6 +12,8 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.3.0",
+    "@unform/core": "^2.1.6",
+    "@unform/web": "^2.1.6",
     "axios": "^1.7.9",
     "crypto-js": "^4.2.0",
     "react": "^19.0.0",

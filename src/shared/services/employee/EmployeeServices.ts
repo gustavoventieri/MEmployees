@@ -88,12 +88,16 @@ const create = async (
   dados: Omit<IEmployeeDetails, "id">
 ): Promise<number | Error> => {
   try {
-    const { data } = await api.post<IEmployeeDetails>("/employee", dados);
+    const { data } = await api.post<IEmployeeDetails>("/employee", dados, {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
+      },
+    });
 
-    if (data) {
-      return data.id;
+    if (typeof data === "number") {
+      return data;
     }
-
     return new Error("Erro ao criar o registro.");
   } catch (error) {
     console.error(error);
@@ -108,7 +112,12 @@ const updateById = async (
   dados: IEmployeeDetails
 ): Promise<void | Error> => {
   try {
-    await api.put(`/employee/${id}`, dados);
+    await api.put(`/employee/${id}`, dados, {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczNjM1NjU2NCwiZXhwIjoxNzM2NDQyOTY0fQ.Vv1XbFxb7X7VlbgClUYqt_Id3pi2-Sj50JFYn2xsELw",
+      },
+    });
   } catch (error) {
     console.error(error);
     return new Error(
