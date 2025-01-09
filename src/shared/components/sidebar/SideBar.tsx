@@ -15,8 +15,8 @@ import { Box } from "@mui/system";
 
 import { useAuthContext, useDrawerContext } from "../../contexts";
 import { useAppThemeContext } from "../../contexts";
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { UseToken } from "../../hooks/UseToken";
+
 interface IListItemLinkProps {
   to: string;
   icon: string;
@@ -57,36 +57,14 @@ interface ISideBarProps {
   children: React.ReactNode;
 }
 
-interface DecodedToken {
-  user_id: number;
-  role: string;
-  exp: number;
-}
-
 export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down("sm"));
   const { logout } = useAuthContext();
   const { isDrawerOpen, drawerOptions, toggleDrawerOpen } = useDrawerContext();
   const { toggleTheme, themeName } = useAppThemeContext();
-  const [role, setRole] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Função para obter o token do localStorage e decodificar
-    const getTokenFromLocalStorage = () => {
-      const token = localStorage.getItem("jwtToken");
-      if (token) {
-        try {
-          const decoded = jwtDecode<DecodedToken>(token); // Decodificando e tipando o token
-          setRole(decoded.role); // Armazenando a role no estado
-        } catch (error) {
-          console.error("Erro ao decodificar o token", error);
-        }
-      }
-    };
-
-    getTokenFromLocalStorage();
-  }, []);
+  const { role } = UseToken();
 
   return (
     <>
@@ -156,11 +134,11 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
               </ListItemIcon>
               <ListItemText primary="Switch Theme" />
             </ListItemButton>
-            <ListItemButton>
-              <ListItemIcon onClick={logout}>
-                <Icon>person</Icon>
+            <ListItemButton onClick={logout}>
+              <ListItemIcon>
+                <Icon>logout</Icon>
               </ListItemIcon>
-              <ListItemText primary="Profile" />
+              <ListItemText primary="Log Out" />
             </ListItemButton>
           </List>
         </Box>
