@@ -1,77 +1,68 @@
 import React, { useState } from "react";
-import CryptoJS from "crypto-js";
+import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
 import * as yup from "yup";
-
 import { BaseLayout } from "../../shared/layouts";
 import { DetailsTools } from "../../shared/components";
 import { useNavigate } from "react-router-dom";
 import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
-import { Enviroment } from "../../shared/environment";
-import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
-import { PositionService } from "../../shared/services/api/controllers/position/PositionServices";
+import { AdminService } from "../../shared/services/api/controllers/admin/AdminServices";
 
 interface IFormData {
   name: string;
+  email: string;
+  password: string;
+  c_password: string;
 }
 
 const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
-  name: yup.string().required().max(150).min(3),
+  name: yup.string().required().min(3),
+  email: yup.string().required().email(),
+  password: yup.string().required().min(8),
+  c_password: yup
+    .string()
+    .required()
+    .oneOf([yup.ref("password")], "As senhas não coincidem"),
 });
 
-export const CreatePosition: React.FC = () => {
+export const AdminCreate: React.FC = () => {
   const navigate = useNavigate();
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
   const [isLoading, setLoading] = useState(false); // Seta o loading
-  const secretKey = Enviroment.PASSDECRYPT;
-
-  const encryptData = (data: number) => {
-    return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
-  };
 
   const handleSave = (dados: IFormData) => {
     formValidationSchema
       .validate(dados, { abortEarly: false })
       .then((dadosValidados) => {
-        PositionService.create(dadosValidados).then((result) => {
+        setLoading(true);
+        AdminService.create({
+          name: dadosValidados.name,
+          email: dadosValidados.email,
+          password: dadosValidados.password,
+        }).then((result) => {
           setLoading(false);
           if (result instanceof Error) {
-            navigate("/position", {
+            navigate("/admin", {
               state: {
-                message: "Position Wasn't Created!",
+                message: "Admin Wasn't Created!",
                 severity: "error",
               },
             });
           } else {
-            const encryptedId = encryptData(result);
-            const encodedId = encodeURIComponent(encryptedId);
-            if (isSaveAndClose()) {
-              navigate("/position", {
-                state: {
-                  message: "Position Created!",
-                  severity: "success",
-                },
-              });
-            } else {
-              navigate(`/position/edit/${encodedId}`, {
-                state: {
-                  message: "Position Created! You Can Edit Now!",
-                  severity: "success",
-                },
-              });
-            }
+            navigate(`/admin`, {
+              state: {
+                message: "Position Created!",
+                severity: "success",
+              },
+            });
           }
         });
       })
       .catch((errors: yup.ValidationError) => {
         const validationErrors: IVFormErrors = {};
-
         errors.inner.forEach((error) => {
-          if (!error.path) return;
-
-          validationErrors[error.path] = error.message;
+          if (error.path) validationErrors[error.path] = error.message;
         });
-
         formRef.current?.setErrors(validationErrors);
       });
   };
@@ -83,8 +74,8 @@ export const CreatePosition: React.FC = () => {
         <DetailsTools
           showDeleteButton={false}
           showNewButton={false}
-          showSaveAndExitButton
-          handleClickOnPrevious={() => navigate("/position")}
+          showSaveAndExitButton={false}
+          handleClickOnPrevious={() => navigate("/employee")}
           handleClickOnSave={save}
           handleClickOnSaveAndExit={saveAndClose}
         />
@@ -122,6 +113,41 @@ export const CreatePosition: React.FC = () => {
                   disabled={isLoading}
                   label="Name"
                   name="name"
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField
+                  fullWidth
+                  disabled={isLoading}
+                  label="Email"
+                  name="email"
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField
+                  fullWidth
+                  disabled={isLoading}
+                  label="Password"
+                  name="password"
+                  type="password"
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField
+                  fullWidth
+                  disabled={isLoading}
+                  label="Confirm Password"
+                  name="c_password"
+                  type="password"
                 />
               </Grid>
             </Grid>

@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import * as yup from "yup";
 import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
 
 import { Enviroment } from "../../shared/environment";
 import { BaseLayout } from "../../shared/layouts";
-import { DetailsTools } from "../../shared/components";
+import { AlertBox, ConfirmDialog, DetailsTools } from "../../shared/components";
 import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
 import {
   IPositionList,
   PositionService,
 } from "../../shared/services/api/controllers/position/PositionServices";
+import { TSeverity } from "../../shared/components/alertBox/types/TSeverity";
 
 interface IFormData {
   name: string;
@@ -22,13 +23,19 @@ const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
 });
 
 export const EditPosition: React.FC = () => {
-  const { id = "nova" } = useParams<"id">();
-  const [positionId, setPositionId] = useState<number | null>(null);
-  const secretKey = Enviroment.PASSDECRYPT;
+  const location = useLocation();
   const navigate = useNavigate();
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
+  const { id = "nova" } = useParams<"id">();
 
-  const [isLoading, setLoading] = useState(true);
+  const [positionId, setPositionId] = useState<number | null>(null); // Seta o Id da posição
+  const [severity, setSeverity] = useState<TSeverity>("success"); // Seta o nivel do alert
+  const [isLoading, setLoading] = useState(true); // Seta o loading
+  const [message, setMessage] = useState(""); // Seta a mensagem do alert
+  const [openSnackBar, setOpenSnackBar] = useState(false); // seta o estado do alert
+  const [openDialog, setOpenDialog] = useState(false); // Controla o modal de exclusão
+  const [deleteId, setDeleteId] = useState<number | null>(null); // Armazena o ID do item a ser excluído
+  const secretKey = Enviroment.PASSDECRYPT;
 
   useEffect(() => {
     if (id !== "nova") {
@@ -40,7 +47,7 @@ export const EditPosition: React.FC = () => {
       if (decryptedId !== null) {
         PositionService.getById(Number(decryptedId)).then((result) => {
           if (result instanceof Error) {
-            alert(result.message);
+            console.log(result.message);
             navigate("/position");
           } else {
             setLoading(false);
@@ -50,6 +57,13 @@ export const EditPosition: React.FC = () => {
       }
     }
   }, [id]);
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setOpenSnackBar(true);
+    }
+  }, [location.state]);
 
   const handleUpdate = (dados: Omit<IPositionList, "id">) => {
     formValidationSchema
@@ -62,11 +76,24 @@ export const EditPosition: React.FC = () => {
         }).then((result) => {
           setLoading(false);
           if (result instanceof Error) {
-            alert(result.message);
-            navigate("/position");
+            navigate("/position", {
+              state: {
+                message: "Position Wasn't Created!",
+                severity: "error",
+              },
+            });
           } else {
             if (isSaveAndClose()) {
-              navigate("/position");
+              navigate("/position", {
+                state: {
+                  message: "Position Updated!",
+                  severity: "success",
+                },
+              });
+            } else {
+              setMessage("Position Saved");
+              setOpenSnackBar(true);
+              setSeverity("success");
             }
           }
         });
@@ -84,18 +111,35 @@ export const EditPosition: React.FC = () => {
       });
   };
 
+  const handleClose = () => {
+    setOpenSnackBar(false);
+  };
+
   const handleDelete = (id: number) => {
-    /* eslint-disable-next-line no-restricted-globals */
-    if (confirm("Realmente deseja apagar?")) {
-      PositionService.deleteById(id).then((result) => {
-        if (result instanceof Error) {
-          return alert(result.message);
-        } else {
-          alert("Registro apagado com sucesso!");
-          navigate("/position");
-        }
-      });
-    }
+    setDeleteId(id); // Armazenando o ID para exclusão
+    setOpenDialog(true); // Abrindo o modal
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteId === null) return;
+    console.log(deleteId);
+    PositionService.deleteById(deleteId).then((result) => {
+      if (result instanceof Error) {
+        setMessage(
+          "You can't Delete This Tosition, It's Associated To Someone "
+        );
+        setOpenSnackBar(true);
+      } else {
+        navigate("/position", {
+          state: {
+            message: "Position Deleted!",
+            severity: "success",
+          },
+        });
+      }
+      setOpenDialog(false);
+      setDeleteId(null); // Limpa o ID após a exclusão
+    });
   };
 
   return (
@@ -152,6 +196,21 @@ export const EditPosition: React.FC = () => {
           </Grid>
         </Box>
       </VForm>
+
+      <ConfirmDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)} // Fecha o modal sem fazer nada
+        onConfirm={handleConfirmDelete} // Executa a exclusão
+        title="Confirmation"
+        content="Are you sure you want to delete this record?"
+      />
+
+      <AlertBox
+        message={message}
+        open={openSnackBar}
+        onClose={handleClose}
+        severity={severity}
+      />
     </BaseLayout>
   );
 };

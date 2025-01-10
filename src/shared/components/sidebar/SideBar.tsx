@@ -132,7 +132,7 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
                   <Icon>dark_mode</Icon>
                 )}
               </ListItemIcon>
-              <ListItemText primary="Switch Theme" />
+              <ListItemText primary={role} />
             </ListItemButton>
 
             <ListItemButton onClick={logout}>

@@ -7,10 +7,10 @@ import { PositionService } from "../../shared/services/api/controllers/position/
 import { employeeService } from "../../shared/services/api/controllers/employee/EmployeeServices";
 
 export const Dashboard = () => {
-  const [isLoadingPositions, setIsLoadingPositions] = useState(true);
-  const [isLoadingEmployees, setIsLoadingEmployees] = useState(true);
-  const [totalCountPositions, setTotalCountPositions] = useState(0);
-  const [totalCountEmployees, setTotalCountEmployees] = useState(0);
+  const [isLoadingPositions, setIsLoadingPositions] = useState(true); // Seta o loading de Positions
+  const [isLoadingEmployees, setIsLoadingEmployees] = useState(true); // Seta o loading de Employees
+  const [totalCountPositions, setTotalCountPositions] = useState(0); // Seta o total de position
+  const [totalCountEmployees, setTotalCountEmployees] = useState(0); // Seta o total de Employees
 
   useEffect(() => {
     setIsLoadingPositions(true);
@@ -20,7 +20,7 @@ export const Dashboard = () => {
       setIsLoadingPositions(false);
 
       if (result instanceof Error) {
-        alert(result.message);
+        console.log(result.message);
       } else {
         setTotalCountPositions(result.totalCount);
       }
@@ -29,7 +29,7 @@ export const Dashboard = () => {
       setIsLoadingEmployees(false);
 
       if (result instanceof Error) {
-        alert(result.message);
+        console.log(result.message);
       } else {
         setTotalCountEmployees(result.totalCount);
       }

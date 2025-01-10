@@ -17,37 +17,33 @@ import CryptoJS from "crypto-js";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
-import { useDebounce } from "../../shared/hooks";
+import { useDebounce, UseToken } from "../../shared/hooks";
 import { Enviroment } from "../../shared/environment";
 import { useAppThemeContext } from "../../shared/contexts";
 import { AlertBox, ConfirmDialog, ToolsBar } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
 import {
-  IPositionList,
-  PositionService,
-} from "../../shared/services/api/controllers/position/PositionServices";
+  AdminService,
+  IAdminList,
+} from "../../shared/services/api/controllers/admin/AdminServices";
 import { TSeverity } from "../../shared/components/alertBox/types/TSeverity";
 
-export const PositionList: React.FC = () => {
+export const AdminsList: React.FC = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
   const navigate = useNavigate();
+  const { uid } = UseToken();
   const { themeName } = useAppThemeContext();
 
+  const [rows, setRows] = useState<IAdminList[]>([]);// Seta as linhas da tabela
+  const [count, setCount] = useState(0);// Seta o valor de admins
+  const [isLoading, setIsLoading] = useState(true);// Seta o loading
+  const [message, setMessage] = useState("");// Seta a mensagem do alert
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [severity, setSeverity] = useState<TSeverity>("success"); // Tipo de Alert
   const [openDialog, setOpenDialog] = useState(false); // Controla o modal de exclusão
   const [deleteId, setDeleteId] = useState<number | null>(null); // Armazena o ID do item a ser excluído
-  const [message, setMessage] = useState(""); // Seta o mensagem do Alert
-  const [openSnackBar, setOpenSnackBar] = useState(false); // Seta a mensagem do Alert
-  const [severity, setSeverity] = useState<TSeverity>("success"); // Seta o nivel do Alert
-  const [rows, setRows] = useState<IPositionList[]>([]); // Seta as linhas da tabela
-  const [count, setCount] = useState(0); // Seta o count da tabela
-  const [isLoading, setIsLoading] = useState(true); // Seta o loading
-  const secretKey = Enviroment.PASSDECRYPT;
-
-  const encryptData = (data: number) => {
-    return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
-  };
 
   const search = useMemo(() => {
     const query = searchParams.get("search") || "";
@@ -64,7 +60,7 @@ export const PositionList: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      PositionService.getAll(page, search).then(async (result) => {
+      AdminService.getAll(page, search).then(async (result) => {
         setIsLoading(false);
 
         if (result instanceof Error) {
@@ -96,18 +92,15 @@ export const PositionList: React.FC = () => {
   const handleConfirmDelete = () => {
     if (deleteId === null) return;
 
-    PositionService.deleteById(deleteId).then((result) => {
+    AdminService.deleteById(deleteId).then((result) => {
       if (result instanceof Error) {
-        setMessage(
-          "You Can't Delete This Position, It's Associated To Someone "
-        );
+        setMessage("Admin Wasn't Deleted!");
         setOpenSnackBar(true);
         setSeverity("error");
       } else {
         setRows((oldRows) => oldRows.filter((row) => row.id !== deleteId));
-        setMessage("Position Deleted!");
+        setMessage("Admin Deleted!");
         setOpenSnackBar(true);
-        setSeverity("success");
       }
       setOpenDialog(false);
       setDeleteId(null); // Limpa o ID após a exclusão
@@ -116,13 +109,13 @@ export const PositionList: React.FC = () => {
 
   return (
     <BaseLayout
-      title="List Positions"
+      title="List Admins"
       toolsBar={
         <ToolsBar
           showSearchInput
           showNewButton
           searchText={search}
-          handleClinkNew={() => navigate("/position/new")}
+          handleClinkNew={() => navigate("/admin/new")}
           changeTextOnSearchInput={(texto) =>
             setSearchParams({ search: texto, page: "1" }, { replace: true })
           }
@@ -137,37 +130,42 @@ export const PositionList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell width={100}>Actions</TableCell>
+              {uid === 1 && <TableCell width={400}>Actions</TableCell>}
+
               <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {!isLoading &&
+            {(!isLoading &&
+              uid === 1 &&
               rows.map((row) => {
-                const encryptedId = encryptData(row.id);
-                const encodedId = encodeURIComponent(encryptedId);
-
                 return (
                   <TableRow key={row.id}>
                     <TableCell>
                       <IconButton
                         size="small"
                         onClick={() => handleDelete(row.id)}
+                        disabled={row.id === 1}
                       >
                         <Icon>delete</Icon>
                       </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/position/edit/${encodedId}`)}
-                      >
-                        <Icon>edit</Icon>
-                      </IconButton>
                     </TableCell>
-
                     <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.email}</TableCell>
                   </TableRow>
                 );
-              })}
+              })) ||
+              (!isLoading &&
+                uid !== 1 &&
+                rows.map((row) => {
+                  return (
+                    <TableRow key={row.id}>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.email}</TableCell>
+                    </TableRow>
+                  );
+                }))}
           </TableBody>
           {count === 0 &&
             !isLoading &&

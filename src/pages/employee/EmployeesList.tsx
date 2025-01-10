@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@mui/material";
 import CryptoJS from "crypto-js";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
 import {
@@ -24,19 +24,31 @@ import {
 import { useDebounce } from "../../shared/hooks";
 import { Enviroment } from "../../shared/environment";
 import { useAppThemeContext } from "../../shared/contexts";
-import { ToolsBar } from "../../shared/components";
+import { AlertBox, ConfirmDialog, ToolsBar } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
 
 export const EmployeesList: React.FC = () => {
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
+  const { themeName } = useAppThemeContext();
   const navigate = useNavigate();
 
-  const { themeName } = useAppThemeContext();
-  const [rows, setRows] = useState<IEmployeeList[]>([]);
-  const [count, setCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false); // Controla o modal de exclusão
+  const [deleteId, setDeleteId] = useState<number | null>(null); // Armazena o ID do item a ser excluído
+  const [message, setMessage] = useState(""); // Seta a mensagem do Alert
+  const [openSnackBar, setOpenSnackBar] = useState(false); // Seta o estado do Alert
+  const [rows, setRows] = useState<IEmployeeList[]>([]); // SEta as linhas da tabela
+  const [count, setCount] = useState(0); //Seta o count de Emploeyees
+  const [isLoading, setIsLoading] = useState(true); // Seta o Loading
   const secretKey = Enviroment.PASSDECRYPT;
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setOpenSnackBar(true);
+    }
+  }, [location.state]);
 
   const encryptData = (data: number) => {
     return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
@@ -61,7 +73,7 @@ export const EmployeesList: React.FC = () => {
         setIsLoading(false);
 
         if (result instanceof Error) {
-          alert(result.message);
+          console.log(result.message);
         } else {
           setRows(result.data);
           setCount(result.totalCount);
@@ -70,21 +82,29 @@ export const EmployeesList: React.FC = () => {
     });
   }, [search, page]);
 
+  const handleClose = () => {
+    setOpenSnackBar(false);
+  };
+
   const handleDelete = (id: number) => {
-    /* eslint-disable-next-line no-restricted-globals */
-    if (confirm("Realmente deseja apagar?")) {
-      employeeService.deleteById(id).then((result) => {
-        if (result instanceof Error) {
-          return alert(result.message);
-        } else {
-          setRows((oldRows) => [
-            ...oldRows.filter((oldRow) => oldRow.id !== id),
-          ]);
-          alert("Registro apagado com sucesso!");
-          window.location.reload();
-        }
-      });
-    }
+    setDeleteId(id); // Armazenando o ID para exclusão
+    setOpenDialog(true); // Abrindo o modal
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteId === null) return;
+
+    employeeService.deleteById(deleteId).then((result) => {
+      if (result instanceof Error) {
+        console.log(result.message);
+      } else {
+        setRows((oldRows) => oldRows.filter((row) => row.id !== deleteId));
+        setMessage("Employee Deleted!");
+        setOpenSnackBar(true);
+      }
+      setOpenDialog(false);
+      setDeleteId(null); // Limpa o ID após a exclusão
+    });
   };
 
   return (
@@ -185,6 +205,20 @@ export const EmployeesList: React.FC = () => {
           </TableFooter>
         </Table>
       </TableContainer>
+      <ConfirmDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)} // Fecha o modal sem fazer nada
+        onConfirm={handleConfirmDelete} // Executa a exclusão
+        title="Confirmation"
+        content="Are you sure you want to delete this record?"
+      />
+
+      <AlertBox
+        message={message}
+        open={openSnackBar}
+        onClose={handleClose}
+        severity="success"
+      />
     </BaseLayout>
   );
 };

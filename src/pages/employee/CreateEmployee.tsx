@@ -26,8 +26,9 @@ const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
 export const CreateEmployee: React.FC = () => {
   const navigate = useNavigate();
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
-  const [isLoading, setLoading] = useState(false);
-  const secretKey = Enviroment.PASSDECRYPT;
+
+  const [isLoading, setLoading] = useState(false); // Seta o loading
+  const secretKey = Enviroment.PASSDECRYPT;// Senha Jwt
 
   const encryptData = (data: number) => {
     return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
@@ -40,14 +41,29 @@ export const CreateEmployee: React.FC = () => {
         employeeService.create(dadosValidados).then((result) => {
           setLoading(false);
           if (result instanceof Error) {
-            alert(result.message);
+            navigate(`/employee`, {
+              state: {
+                message: "Employee Wasn't Created!",
+                severity: "error",
+              },
+            });
           } else {
             const encryptedId = encryptData(result);
             const encodedId = encodeURIComponent(encryptedId);
             if (isSaveAndClose()) {
-              navigate("/employee");
+              navigate(`/employee`, {
+                state: {
+                  message: "Employee Created!",
+                  severity: "success",
+                },
+              });
             } else {
-              navigate(`/employee/edit/${encodedId}`);
+              navigate(`/employee/edit/${encodedId}`, {
+                state: {
+                  message: "Employee created! You Can Edit Now!",
+                  severity: "success",
+                },
+              });
             }
           }
         });

@@ -13,6 +13,8 @@ import { CreateEmployee } from "../pages/employee/CreateEmployee";
 import EditPosition from "../pages/position/EditPosition";
 import { Login } from "../pages/login/Login";
 import { ProtectedRoute } from "../shared/services/api/controllers/auth/ProtectedRoutes";
+import { AdminsList } from "../pages/admin/AdminsList";
+import { AdminCreate } from "../pages/admin/AdminCreate";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
@@ -26,12 +28,12 @@ export const AppRoutes = () => {
         label: "Dashboard",
       },
       {
-        icon: "people",
+        icon: "person",
         path: "/user",
         label: "Users",
       },
       {
-        icon: "people",
+        icon: "admin_panel_settings",
         path: "/admin",
         label: "Admins",
       },
@@ -61,6 +63,10 @@ export const AppRoutes = () => {
         <Route path="/position" element={<PositionList />} />
         <Route path="/position/new" element={<CreatePosition />} />
         <Route path="/position/edit/:id" element={<EditPosition />} />
+
+        <Route path="/admin" element={<AdminsList />} />
+        <Route path="/admin/new" element={<AdminCreate />} />
+
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Route>
     </Routes>

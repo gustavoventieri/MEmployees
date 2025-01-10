@@ -22,11 +22,11 @@ export const AutoCompletePosition: React.FC<IAutoCompletePositionProps> = ({
 
   const [selectedId, setSelectedId] = useState<number | undefined>(
     defaultValue
-  );
+  ); // Seta o Id da Position selecionada
 
-  const [opcoes, setOpcoes] = useState<TAutoCompleteOption[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [search, setSearch] = useState("");
+  const [opcoes, setOpcoes] = useState<TAutoCompleteOption[]>([]); // Seta as opções do AutoComplete
+  const [isLoading, setIsLoading] = useState(false); // Seta o Loading
+  const [search, setSearch] = useState(""); // Seta o search
 
   useEffect(() => {
     registerField({
@@ -44,7 +44,7 @@ export const AutoCompletePosition: React.FC<IAutoCompletePositionProps> = ({
         setIsLoading(false);
 
         if (result instanceof Error) {
-          // alert(result.message);
+          //console.log(result.message);
         } else {
           console.log(result);
 
