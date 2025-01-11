@@ -7,6 +7,9 @@ export async function up(knex: Knex) {
       table.bigIncrements("id").primary().index();
       table.string("name").index().notNullable();
       table.string("email").unique().notNullable();
+      table.time("workStartTime").notNullable();
+      table.time("workEndTime").notNullable();
+
       table
         .bigInteger("positionId")
         .index()

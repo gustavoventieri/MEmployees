@@ -18,6 +18,8 @@ export const updateEmployeeByIdValidation = validation((get) => ({
       email: yup.string().required().email(),
       positionId: yup.number().integer().required(),
       name: yup.string().required().min(3),
+      workStartTime: yup.string().required(),
+      workEndTime: yup.string().required(),
     })
   ),
   params: get<IParamProps>(
