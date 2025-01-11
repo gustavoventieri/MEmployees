@@ -4,5 +4,7 @@ export interface IEmployee {
   email: string;
   workStartTime: string;
   workEndTime: string;
+  intervalTime: string;
+
   positionId: number;
 }
