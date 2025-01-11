@@ -9,13 +9,13 @@ import {
   EmployeesList,
   PositionList,
 } from "../pages";
-import { CreateEmployee } from "../pages/employee/CreateEmployee";
-import EditPosition from "../pages/position/EditPosition";
-import { Login } from "../pages/login/Login";
+import { CreateEmployee } from "../pages/Employee/CreateEmployee";
+import EditPosition from "../pages/Position/EditPosition";
+import { Login } from "../pages/Login/Login";
 import { ProtectedRoute } from "../shared/services/api/controllers/auth/ProtectedRoutes";
-import { AdminsList } from "../pages/admin/AdminsList";
-import { AdminCreate } from "../pages/admin/AdminCreate";
-import { Login2 } from "../pages/settings/Settings";
+import { AdminsList } from "../pages/Admin/AdminsList";
+import { AdminCreate } from "../pages/Admin/AdminCreate";
+import { Login2 } from "../pages/Settings/Settings";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();

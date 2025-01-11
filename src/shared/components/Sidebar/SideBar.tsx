@@ -17,7 +17,7 @@ import { useAuthContext, useDrawerContext } from "../../contexts";
 import { useAppThemeContext } from "../../contexts";
 import { UseToken } from "../../hooks/UseToken";
 import { useState } from "react";
-import { ConfirmDialog } from "../confimDialog/confirmDialog";
+import { ConfirmDialog } from "../ConfimDialog/confirmDialog";
 
 interface IListItemLinkProps {
   to: string;

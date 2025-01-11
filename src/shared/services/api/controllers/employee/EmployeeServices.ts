@@ -11,13 +11,16 @@ export interface IEmployeeList {
   positionId: number;
   name: string;
   position?: IPositionDetails | Error;
+  workEndTime: string;
+  workStartTime: string;
 }
-
 interface IEmployeeDetails {
   id: number;
   email: string;
   positionId: number;
   name: string;
+  workEndTime: string;
+  workStartTime: string;
 }
 
 type TEmployyeCount = {

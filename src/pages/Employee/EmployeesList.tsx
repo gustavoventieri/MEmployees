@@ -1,4 +1,5 @@
 import {
+  Box,
   Icon,
   IconButton,
   LinearProgress,
@@ -17,33 +18,42 @@ import CryptoJS from "crypto-js";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
-import { useDebounce, UseToken } from "../../shared/hooks";
+import {
+  employeeService,
+  IEmployeeList,
+} from "../../shared/services/api/controllers/employee/EmployeeServices";
+import { useDebounce } from "../../shared/hooks";
 import { Enviroment } from "../../shared/environment";
 import { useAppThemeContext } from "../../shared/contexts";
 import { AlertBox, ConfirmDialog, ToolsBar } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
-import {
-  AdminService,
-  IAdminList,
-} from "../../shared/services/api/controllers/admin/AdminServices";
-import { TSeverity } from "../../shared/components/alertBox/types/TSeverity";
 
-export const AdminsList: React.FC = () => {
+export const EmployeesList: React.FC = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
-  const navigate = useNavigate();
-  const { uid } = UseToken();
   const { themeName } = useAppThemeContext();
+  const navigate = useNavigate();
 
-  const [rows, setRows] = useState<IAdminList[]>([]);// Seta as linhas da tabela
-  const [count, setCount] = useState(0);// Seta o valor de admins
-  const [isLoading, setIsLoading] = useState(true);// Seta o loading
-  const [message, setMessage] = useState("");// Seta a mensagem do alert
-  const [openSnackBar, setOpenSnackBar] = useState(false);
-  const [severity, setSeverity] = useState<TSeverity>("success"); // Tipo de Alert
   const [openDialog, setOpenDialog] = useState(false); // Controla o modal de exclusão
   const [deleteId, setDeleteId] = useState<number | null>(null); // Armazena o ID do item a ser excluído
+  const [message, setMessage] = useState(""); // Seta a mensagem do Alert
+  const [openSnackBar, setOpenSnackBar] = useState(false); // Seta o estado do Alert
+  const [rows, setRows] = useState<IEmployeeList[]>([]); // SEta as linhas da tabela
+  const [count, setCount] = useState(0); //Seta o count de Emploeyees
+  const [isLoading, setIsLoading] = useState(true); // Seta o Loading
+  const secretKey = Enviroment.PASSDECRYPT;
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setOpenSnackBar(true);
+    }
+  }, [location.state]);
+
+  const encryptData = (data: number) => {
+    return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
+  };
 
   const search = useMemo(() => {
     const query = searchParams.get("search") || "";
@@ -60,7 +70,7 @@ export const AdminsList: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      AdminService.getAll(page, search).then(async (result) => {
+      employeeService.getAll(page, search).then(async (result) => {
         setIsLoading(false);
 
         if (result instanceof Error) {
@@ -72,13 +82,6 @@ export const AdminsList: React.FC = () => {
       });
     });
   }, [search, page]);
-
-  useEffect(() => {
-    if (location.state?.message) {
-      setMessage(location.state.message);
-      setOpenSnackBar(true);
-    }
-  }, [location.state]);
 
   const handleClose = () => {
     setOpenSnackBar(false);
@@ -92,14 +95,12 @@ export const AdminsList: React.FC = () => {
   const handleConfirmDelete = () => {
     if (deleteId === null) return;
 
-    AdminService.deleteById(deleteId).then((result) => {
+    employeeService.deleteById(deleteId).then((result) => {
       if (result instanceof Error) {
-        setMessage("Admin Wasn't Deleted!");
-        setOpenSnackBar(true);
-        setSeverity("error");
+        console.log(result.message);
       } else {
         setRows((oldRows) => oldRows.filter((row) => row.id !== deleteId));
-        setMessage("Admin Deleted!");
+        setMessage("Employee Deleted!");
         setOpenSnackBar(true);
       }
       setOpenDialog(false);
@@ -107,15 +108,36 @@ export const AdminsList: React.FC = () => {
     });
   };
 
+  function isWorking(workStartTime: string, workEndTime: string): string {
+    const now = new Date();
+    const [currentHours, currentMinutes] = [now.getHours(), now.getMinutes()];
+
+    const [startHours, startMinutes] = workStartTime.split(":").map(Number);
+    const [endHours, endMinutes] = workEndTime.split(":").map(Number);
+
+    const startTime = new Date();
+    startTime.setHours(startHours, startMinutes, 0, 0);
+
+    const endTime = new Date();
+    endTime.setHours(endHours, endMinutes, 0, 0);
+
+    // Se o horário atual estiver entre o horário de início e o horário de término
+    if (startTime <= now && endTime >= now) {
+      return "Trabalhando";
+    }
+
+    return "Não Trabalhando";
+  }
+
   return (
     <BaseLayout
-      title="List Admins"
+      title="List Employees"
       toolsBar={
         <ToolsBar
           showSearchInput
           showNewButton
           searchText={search}
-          handleClinkNew={() => navigate("/admin/new")}
+          handleClinkNew={() => navigate("/employee/new")}
           changeTextOnSearchInput={(texto) =>
             setSearchParams({ search: texto, page: "1" }, { replace: true })
           }
@@ -130,42 +152,60 @@ export const AdminsList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              {uid === 1 && <TableCell width={400}>Actions</TableCell>}
+              <TableCell width={100}>Actions</TableCell>
+              <TableCell>Status</TableCell>
 
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
+              <TableCell>Position</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {(!isLoading &&
-              uid === 1 &&
+            {!isLoading &&
               rows.map((row) => {
+                const encryptedId = encryptData(row.id);
+                const encodedId = encodeURIComponent(encryptedId);
+
                 return (
                   <TableRow key={row.id}>
                     <TableCell>
                       <IconButton
                         size="small"
                         onClick={() => handleDelete(row.id)}
-                        disabled={row.id === 1}
                       >
                         <Icon>delete</Icon>
                       </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => navigate(`/employee/edit/${encodedId}`)}
+                      >
+                        <Icon>edit</Icon>
+                      </IconButton>
                     </TableCell>
+                    <TableCell>
+                      <Box
+                        display="inline-block"
+                        width={12}
+                        height={12}
+                        borderRadius="50%"
+                        sx={{
+                          backgroundColor:
+                            isWorking(row.workStartTime, row.workEndTime) ===
+                            "Trabalhando"
+                              ? "green"
+                              : "red",
+                          marginRight: 1,
+                        }}
+                      />
+                      {isWorking(row.workStartTime, row.workEndTime)}
+                    </TableCell>
+
                     <TableCell>{row.name}</TableCell>
                     <TableCell>{row.email}</TableCell>
+                    <TableCell>{row.position?.name}</TableCell>
                   </TableRow>
                 );
-              })) ||
-              (!isLoading &&
-                uid !== 1 &&
-                rows.map((row) => {
-                  return (
-                    <TableRow key={row.id}>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.email}</TableCell>
-                    </TableRow>
-                  );
-                }))}
+              })}
           </TableBody>
           {count === 0 &&
             !isLoading &&
@@ -180,14 +220,14 @@ export const AdminsList: React.FC = () => {
           <TableFooter>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={3}>
+                <TableCell colSpan={5}>
                   <LinearProgress variant="indeterminate" />
                 </TableCell>
               </TableRow>
             )}
             {count > 0 && count > Enviroment.LIMITE_LINHAS && (
               <TableRow>
-                <TableCell colSpan={3}>
+                <TableCell colSpan={5}>
                   <Stack>
                     <Pagination
                       page={page}
@@ -207,7 +247,6 @@ export const AdminsList: React.FC = () => {
           </TableFooter>
         </Table>
       </TableContainer>
-
       <ConfirmDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)} // Fecha o modal sem fazer nada
@@ -220,7 +259,7 @@ export const AdminsList: React.FC = () => {
         message={message}
         open={openSnackBar}
         onClose={handleClose}
-        severity={severity}
+        severity="success"
       />
     </BaseLayout>
   );

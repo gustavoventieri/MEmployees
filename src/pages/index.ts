@@ -1,6 +1,6 @@
-export * from "./dashboard/Dashboard";
-export * from "./employee/EmployeesList";
-export * from "./employee/EditEmployee";
+export * from "./Dashboard/Dashboard";
+export * from "./Employee/EmployeesList";
+export * from "./Employee/EditEmployee";
 
-export * from "./position/PositionList";
-export * from "./position/CreatePosition";
+export * from "./Position/PositionList";
+export * from "./Position/CreatePosition";

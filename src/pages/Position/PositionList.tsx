@@ -26,7 +26,7 @@ import {
   IPositionList,
   PositionService,
 } from "../../shared/services/api/controllers/position/PositionServices";
-import { TSeverity } from "../../shared/components/alertBox/types/TSeverity";
+import { TSeverity } from "../../shared/components/AlertBox/types/TSeverity";
 
 export const PositionList: React.FC = () => {
   const location = useLocation();

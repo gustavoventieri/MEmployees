@@ -14,6 +14,8 @@ import { AutoCompletePosition } from "./components/AutoComplete";
 interface IFormData {
   name: string;
   email: string;
+  workStartTime: string;
+  workEndTime: string;
   positionId: number;
 }
 
@@ -21,6 +23,30 @@ const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
   positionId: yup.number().required(),
   email: yup.string().required().email(),
   name: yup.string().required().min(3),
+  workStartTime: yup
+    .string()
+    .required("Work start time is required")
+    .matches(
+      /^(?:([01]?[0-9]|2[0-3]):([0-5][0-9]))$/,
+      "Invalid time format (HH:mm)"
+    )
+    .test("valid-time", "Invalid start time", (value) => {
+      if (!value) return false;
+      const [hours, minutes] = value.split(":").map(Number);
+      return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
+    }),
+  workEndTime: yup
+    .string()
+    .required("Work end time is required")
+    .matches(
+      /^(?:([01]?[0-9]|2[0-3]):([0-5][0-9]))$/,
+      "Invalid time format (HH:mm)"
+    )
+    .test("valid-time", "Invalid end time", (value) => {
+      if (!value) return false;
+      const [hours, minutes] = value.split(":").map(Number);
+      return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
+    }),
 });
 
 export const CreateEmployee: React.FC = () => {
@@ -28,7 +54,8 @@ export const CreateEmployee: React.FC = () => {
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
   const [isLoading, setLoading] = useState(false); // Seta o loading
-  const secretKey = Enviroment.PASSDECRYPT;// Senha Jwt
+
+  const secretKey = Enviroment.PASSDECRYPT; // Senha Jwt
 
   const encryptData = (data: number) => {
     return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
@@ -138,6 +165,38 @@ export const CreateEmployee: React.FC = () => {
                   disabled={isLoading}
                   label="Email"
                   name="email"
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField
+                  fullWidth
+                  disabled={isLoading}
+                  label="Work Start Time"
+                  name="workStartTime"
+                  placeholder="HH:MM"
+                  inputProps={{
+                    minLength: 5, // Mínimo de 3 caracteres
+                    maxLength: 5, // Máximo de 10 caracteres
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField
+                  fullWidth
+                  disabled={isLoading}
+                  label="Work End Time"
+                  name="workEndTime"
+                  placeholder="HH:MM"
+                  inputProps={{
+                    minLength: 5, // Mínimo de 3 caracteres
+                    maxLength: 5, // Máximo de 10 caracteres
+                  }}
                 />
               </Grid>
             </Grid>

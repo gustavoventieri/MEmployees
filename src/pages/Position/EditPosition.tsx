@@ -7,53 +7,48 @@ import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
 import { Enviroment } from "../../shared/environment";
 import { BaseLayout } from "../../shared/layouts";
 import { AlertBox, ConfirmDialog, DetailsTools } from "../../shared/components";
-import {
-  employeeService,
-  IEmployeeList,
-} from "../../shared/services/api/controllers/employee/EmployeeServices";
 import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
-import { AutoCompletePosition } from "./components/AutoComplete";
-import { TSeverity } from "../../shared/components/alertBox/types/TSeverity";
+import {
+  IPositionList,
+  PositionService,
+} from "../../shared/services/api/controllers/position/PositionServices";
+import { TSeverity } from "../../shared/components/AlertBox/types/TSeverity";
 
 interface IFormData {
   name: string;
-  email: string;
-  positionId: number;
 }
 
 const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
-  positionId: yup.number().required(),
-  email: yup.string().required().email(),
-  name: yup.string().required().min(3),
+  name: yup.string().required().max(150).min(3),
 });
 
-export const EditEmployee: React.FC = () => {
+export const EditPosition: React.FC = () => {
   const location = useLocation();
-  const { id = "nova" } = useParams<"id">();
   const navigate = useNavigate();
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
+  const { id = "nova" } = useParams<"id">();
 
-  const [employeeId, setEmployeeId] = useState<number | null>(null); // Seta o id do employee para ser excluido
-  const [severity, setSeverity] = useState<TSeverity>("success"); // Tipo do Alert
+  const [positionId, setPositionId] = useState<number | null>(null); // Seta o Id da posição
+  const [severity, setSeverity] = useState<TSeverity>("success"); // Seta o nivel do alert
   const [isLoading, setLoading] = useState(true); // Seta o loading
-  const [message, setMessage] = useState(""); // Seta a mensagem do Alert
-  const [openSnackBar, setOpenSnackBar] = useState(false); // Seta o estado do Alert
+  const [message, setMessage] = useState(""); // Seta a mensagem do alert
+  const [openSnackBar, setOpenSnackBar] = useState(false); // seta o estado do alert
   const [openDialog, setOpenDialog] = useState(false); // Controla o modal de exclusão
   const [deleteId, setDeleteId] = useState<number | null>(null); // Armazena o ID do item a ser excluído
-  const secretKey = Enviroment.PASSDECRYPT; // Senha Jwt
+  const secretKey = Enviroment.PASSDECRYPT;
 
   useEffect(() => {
     if (id !== "nova") {
       const decodedId = decodeURIComponent(id);
       const bytes = CryptoJS.AES.decrypt(decodedId, secretKey);
       const decryptedId = bytes.toString(CryptoJS.enc.Utf8);
-      setEmployeeId(Number(decryptedId));
+      setPositionId(Number(decryptedId));
 
       if (decryptedId !== null) {
-        employeeService.getById(Number(decryptedId)).then((result) => {
+        PositionService.getById(Number(decryptedId)).then((result) => {
           if (result instanceof Error) {
             console.log(result.message);
-            navigate("/employee");
+            navigate("/position");
           } else {
             setLoading(false);
             formRef.current?.setData(result);
@@ -62,6 +57,7 @@ export const EditEmployee: React.FC = () => {
       }
     }
   }, [id]);
+
   useEffect(() => {
     if (location.state?.message) {
       setMessage(location.state.message);
@@ -69,41 +65,38 @@ export const EditEmployee: React.FC = () => {
     }
   }, [location.state]);
 
-  const handleUpdate = (dados: Omit<IEmployeeList, "id">) => {
+  const handleUpdate = (dados: Omit<IPositionList, "id">) => {
     formValidationSchema
       .validate(dados, { abortEarly: false })
       .then((dadosValidados) => {
         setLoading(true);
-        employeeService
-          .updateById(Number(employeeId), {
-            id: Number(employeeId),
-            ...dadosValidados,
-          })
-          .then((result) => {
-            setLoading(false);
-            if (result instanceof Error) {
-              console.log(result.message);
+        PositionService.updateById(Number(positionId), {
+          id: Number(positionId),
+          ...dadosValidados,
+        }).then((result) => {
+          setLoading(false);
+          if (result instanceof Error) {
+            navigate("/position", {
+              state: {
+                message: "Position Wasn't Created!",
+                severity: "error",
+              },
+            });
+          } else {
+            if (isSaveAndClose()) {
               navigate("/position", {
                 state: {
-                  message: "Employee wasn't created!",
-                  severity: "error",
+                  message: "Position Updated!",
+                  severity: "success",
                 },
               });
             } else {
-              if (isSaveAndClose()) {
-                navigate("/employee", {
-                  state: {
-                    message: "Employee Updated!",
-                    severity: "success",
-                  },
-                });
-              } else {
-                setMessage("Employee Saved");
-                setOpenSnackBar(true);
-                setSeverity("success");
-              }
+              setMessage("Position Saved");
+              setOpenSnackBar(true);
+              setSeverity("success");
             }
-          });
+          }
+        });
       })
       .catch((errors: yup.ValidationError) => {
         const validationErrors: IVFormErrors = {};
@@ -129,14 +122,17 @@ export const EditEmployee: React.FC = () => {
 
   const handleConfirmDelete = () => {
     if (deleteId === null) return;
-
-    employeeService.deleteById(deleteId).then((result) => {
+    console.log(deleteId);
+    PositionService.deleteById(deleteId).then((result) => {
       if (result instanceof Error) {
-        console.log(result.message);
+        setMessage(
+          "You can't Delete This Tosition, It's Associated To Someone "
+        );
+        setOpenSnackBar(true);
       } else {
-        navigate("/employee", {
+        navigate("/position", {
           state: {
-            message: "Employee Deleted!",
+            message: "Position Deleted!",
             severity: "success",
           },
         });
@@ -148,15 +144,15 @@ export const EditEmployee: React.FC = () => {
 
   return (
     <BaseLayout
-      title="Edit Employee"
+      title="Edit Position"
       toolsBar={
         <DetailsTools
           showDeleteButton
           showSaveAndExitButton
           showNewButton
-          handleClickOnPrevious={() => navigate("/employee")}
-          handleClickOnNew={() => navigate("/employee/new")}
-          handleClickOnDelete={() => handleDelete(Number(employeeId))}
+          handleClickOnPrevious={() => navigate("/position")}
+          handleClickOnNew={() => navigate("/position/new")}
+          handleClickOnDelete={() => handleDelete(Number(positionId))}
           handleClickOnSave={save}
           handleClickOnSaveAndExit={saveAndClose}
         />
@@ -197,23 +193,6 @@ export const EditEmployee: React.FC = () => {
                 />
               </Grid>
             </Grid>
-
-            <Grid container item direction="row">
-              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                <VTextField
-                  fullWidth
-                  disabled={isLoading}
-                  label="Email"
-                  name="email"
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container item direction="row">
-              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                <AutoCompletePosition isExternalLoading={isLoading} />
-              </Grid>
-            </Grid>
           </Grid>
         </Box>
       </VForm>
@@ -236,4 +215,4 @@ export const EditEmployee: React.FC = () => {
   );
 };
 
-export default EditEmployee;
+export default EditPosition;

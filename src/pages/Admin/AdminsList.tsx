@@ -17,42 +17,33 @@ import CryptoJS from "crypto-js";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
-import {
-  employeeService,
-  IEmployeeList,
-} from "../../shared/services/api/controllers/employee/EmployeeServices";
-import { useDebounce } from "../../shared/hooks";
+import { useDebounce, UseToken } from "../../shared/hooks";
 import { Enviroment } from "../../shared/environment";
 import { useAppThemeContext } from "../../shared/contexts";
 import { AlertBox, ConfirmDialog, ToolsBar } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
+import {
+  AdminService,
+  IAdminList,
+} from "../../shared/services/api/controllers/admin/AdminServices";
+import { TSeverity } from "../../shared/components/AlertBox/types/TSeverity";
 
-export const EmployeesList: React.FC = () => {
+export const AdminsList: React.FC = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce();
-  const { themeName } = useAppThemeContext();
   const navigate = useNavigate();
+  const { uid } = UseToken();
+  const { themeName } = useAppThemeContext();
 
+  const [rows, setRows] = useState<IAdminList[]>([]); // Seta as linhas da tabela
+  const [count, setCount] = useState(0); // Seta o valor de admins
+  const [isLoading, setIsLoading] = useState(true); // Seta o loading
+  const [message, setMessage] = useState(""); // Seta a mensagem do alert
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [severity, setSeverity] = useState<TSeverity>("success"); // Tipo de Alert
   const [openDialog, setOpenDialog] = useState(false); // Controla o modal de exclusão
   const [deleteId, setDeleteId] = useState<number | null>(null); // Armazena o ID do item a ser excluído
-  const [message, setMessage] = useState(""); // Seta a mensagem do Alert
-  const [openSnackBar, setOpenSnackBar] = useState(false); // Seta o estado do Alert
-  const [rows, setRows] = useState<IEmployeeList[]>([]); // SEta as linhas da tabela
-  const [count, setCount] = useState(0); //Seta o count de Emploeyees
-  const [isLoading, setIsLoading] = useState(true); // Seta o Loading
-  const secretKey = Enviroment.PASSDECRYPT;
-
-  useEffect(() => {
-    if (location.state?.message) {
-      setMessage(location.state.message);
-      setOpenSnackBar(true);
-    }
-  }, [location.state]);
-
-  const encryptData = (data: number) => {
-    return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
-  };
 
   const search = useMemo(() => {
     const query = searchParams.get("search") || "";
@@ -69,7 +60,7 @@ export const EmployeesList: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      employeeService.getAll(page, search).then(async (result) => {
+      AdminService.getAll(page, search).then(async (result) => {
         setIsLoading(false);
 
         if (result instanceof Error) {
@@ -81,6 +72,13 @@ export const EmployeesList: React.FC = () => {
       });
     });
   }, [search, page]);
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setOpenSnackBar(true);
+    }
+  }, [location.state]);
 
   const handleClose = () => {
     setOpenSnackBar(false);
@@ -94,12 +92,14 @@ export const EmployeesList: React.FC = () => {
   const handleConfirmDelete = () => {
     if (deleteId === null) return;
 
-    employeeService.deleteById(deleteId).then((result) => {
+    AdminService.deleteById(deleteId).then((result) => {
       if (result instanceof Error) {
-        console.log(result.message);
+        setMessage("Admin Wasn't Deleted!");
+        setOpenSnackBar(true);
+        setSeverity("error");
       } else {
         setRows((oldRows) => oldRows.filter((row) => row.id !== deleteId));
-        setMessage("Employee Deleted!");
+        setMessage("Admin Deleted!");
         setOpenSnackBar(true);
       }
       setOpenDialog(false);
@@ -109,13 +109,13 @@ export const EmployeesList: React.FC = () => {
 
   return (
     <BaseLayout
-      title="List Employees"
+      title="List Admins"
       toolsBar={
         <ToolsBar
           showSearchInput
           showNewButton
           searchText={search}
-          handleClinkNew={() => navigate("/employee/new")}
+          handleClinkNew={() => navigate("/admin/new")}
           changeTextOnSearchInput={(texto) =>
             setSearchParams({ search: texto, page: "1" }, { replace: true })
           }
@@ -130,40 +130,42 @@ export const EmployeesList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell width={100}>Actions</TableCell>
+              {uid === 1 && <TableCell width={400}>Actions</TableCell>}
+
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Position</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {!isLoading &&
+            {(!isLoading &&
+              uid === 1 &&
               rows.map((row) => {
-                const encryptedId = encryptData(row.id);
-                const encodedId = encodeURIComponent(encryptedId);
-
                 return (
                   <TableRow key={row.id}>
                     <TableCell>
                       <IconButton
                         size="small"
                         onClick={() => handleDelete(row.id)}
+                        disabled={row.id === 1}
                       >
                         <Icon>delete</Icon>
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/employee/edit/${encodedId}`)}
-                      >
-                        <Icon>edit</Icon>
                       </IconButton>
                     </TableCell>
                     <TableCell>{row.name}</TableCell>
                     <TableCell>{row.email}</TableCell>
-                    <TableCell>{row.position?.name}</TableCell>
                   </TableRow>
                 );
-              })}
+              })) ||
+              (!isLoading &&
+                uid !== 1 &&
+                rows.map((row) => {
+                  return (
+                    <TableRow key={row.id}>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.email}</TableCell>
+                    </TableRow>
+                  );
+                }))}
           </TableBody>
           {count === 0 &&
             !isLoading &&
@@ -178,14 +180,14 @@ export const EmployeesList: React.FC = () => {
           <TableFooter>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={3}>
                   <LinearProgress variant="indeterminate" />
                 </TableCell>
               </TableRow>
             )}
             {count > 0 && count > Enviroment.LIMITE_LINHAS && (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={3}>
                   <Stack>
                     <Pagination
                       page={page}
@@ -205,6 +207,7 @@ export const EmployeesList: React.FC = () => {
           </TableFooter>
         </Table>
       </TableContainer>
+
       <ConfirmDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)} // Fecha o modal sem fazer nada
@@ -217,7 +220,7 @@ export const EmployeesList: React.FC = () => {
         message={message}
         open={openSnackBar}
         onClose={handleClose}
-        severity="success"
+        severity={severity}
       />
     </BaseLayout>
   );
