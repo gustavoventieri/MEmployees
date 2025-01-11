@@ -1,5 +1,6 @@
 import {
   Box,
+  Chip,
   Icon,
   IconButton,
   LinearProgress,
@@ -182,23 +183,19 @@ export const EmployeesList: React.FC = () => {
                         <Icon>edit</Icon>
                       </IconButton>
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        display="inline-block"
-                        width={12}
-                        height={12}
-                        borderRadius="50%"
-                        sx={{
-                          backgroundColor:
-                            isWorking(row.workStartTime, row.workEndTime) ===
-                            "Trabalhando"
-                              ? "green"
-                              : "red",
-                          marginRight: 1,
-                        }}
-                      />
-                      {isWorking(row.workStartTime, row.workEndTime)}
-                    </TableCell>
+
+                    {(isWorking(row.workStartTime, row.workEndTime) ===
+                      "Trabalhando" && (
+                      <TableCell>
+                        <Chip label="Working" color="success" />
+                      </TableCell>
+                    )) ||
+                      (isWorking(row.workStartTime, row.workEndTime) ===
+                        "Não Trabalhando" && (
+                        <TableCell>
+                          <Chip label="Not Working" color="error" />
+                        </TableCell>
+                      ))}
 
                     <TableCell>{row.name}</TableCell>
                     <TableCell>{row.email}</TableCell>
