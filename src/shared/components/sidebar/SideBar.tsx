@@ -16,6 +16,8 @@ import { Box } from "@mui/system";
 import { useAuthContext, useDrawerContext } from "../../contexts";
 import { useAppThemeContext } from "../../contexts";
 import { UseToken } from "../../hooks/UseToken";
+import { useState } from "react";
+import { ConfirmDialog } from "../confimDialog/confirmDialog";
 
 interface IListItemLinkProps {
   to: string;
@@ -63,8 +65,21 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
   const { logout } = useAuthContext();
   const { isDrawerOpen, drawerOptions, toggleDrawerOpen } = useDrawerContext();
   const { toggleTheme, themeName } = useAppThemeContext();
-
   const { role } = UseToken();
+  const navigate = useNavigate();
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleLogOut = () => {
+    setOpenDialog(true); // Abrindo o modal
+  };
+
+  const handleConfirmLogOut = () => {
+    logout();
+  };
+  const handleSettings = () => {
+    navigate("/settings");
+  };
 
   return (
     <>
@@ -124,6 +139,13 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
         </Box>
         <Box margin="0" padding="0">
           <List component="nav">
+            <ListItemButton onClick={handleSettings}>
+              <ListItemIcon>
+                <Icon>settings</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+            </ListItemButton>
+
             <ListItemButton onClick={toggleTheme}>
               <ListItemIcon>
                 {themeName === "light" ? (
@@ -132,10 +154,10 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
                   <Icon>dark_mode</Icon>
                 )}
               </ListItemIcon>
-              <ListItemText primary={role} />
+              <ListItemText primary="Switch Theme" />
             </ListItemButton>
 
-            <ListItemButton onClick={logout}>
+            <ListItemButton onClick={handleLogOut}>
               <ListItemIcon>
                 <Icon>logout</Icon>
               </ListItemIcon>
@@ -148,6 +170,14 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
       <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(28)}>
         {children}
       </Box>
+
+      <ConfirmDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)} // Fecha o modal sem fazer nada
+        onConfirm={handleConfirmLogOut} // Executa a exclusão
+        title="Log Out"
+        content="Are you sure you want to end the session"
+      />
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { useDrawerContext } from "../shared/contexts";
+import { useAuthContext, useDrawerContext } from "../shared/contexts";
 import {
   CreatePosition,
   Dashboard,
@@ -15,9 +15,11 @@ import { Login } from "../pages/login/Login";
 import { ProtectedRoute } from "../shared/services/api/controllers/auth/ProtectedRoutes";
 import { AdminsList } from "../pages/admin/AdminsList";
 import { AdminCreate } from "../pages/admin/AdminCreate";
+import { Login2 } from "../pages/settings/Settings";
 
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
+  const { isAuthenticated } = useAuthContext();
 
   // Informações para a lista do drawer
   useEffect(() => {
@@ -52,7 +54,8 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      {(!isAuthenticated && <Route path="/" element={<Login />} />) ||
+        (isAuthenticated && <Route path="/" element={<Dashboard />} />)}
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
@@ -66,6 +69,8 @@ export const AppRoutes = () => {
 
         <Route path="/admin" element={<AdminsList />} />
         <Route path="/admin/new" element={<AdminCreate />} />
+
+        <Route path="/settings" element={<Login2 />} />
 
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Route>

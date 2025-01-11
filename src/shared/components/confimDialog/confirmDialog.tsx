@@ -28,7 +28,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   content,
 }) => {
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>
         <Box display="flex" alignItems="center" gap={1}>
           <Icon>info_outlined</Icon>
