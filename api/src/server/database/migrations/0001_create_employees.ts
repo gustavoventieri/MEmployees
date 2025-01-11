@@ -9,6 +9,7 @@ export async function up(knex: Knex) {
       table.string("email").unique().notNullable();
       table.time("workStartTime").notNullable();
       table.time("workEndTime").notNullable();
+      table.time("intervalTime").notNullable();
 
       table
         .bigInteger("positionId")
