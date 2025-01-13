@@ -13,6 +13,7 @@ export interface IEmployeeList {
   position?: IPositionDetails | Error;
   workEndTime: string;
   workStartTime: string;
+  intervalTime: string;
 }
 interface IEmployeeDetails {
   id: number;
@@ -21,6 +22,7 @@ interface IEmployeeDetails {
   name: string;
   workEndTime: string;
   workStartTime: string;
+  intervalTime: string;
 }
 
 type TEmployyeCount = {

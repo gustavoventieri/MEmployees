@@ -39,6 +39,7 @@ interface IFormData {
   email: string;
   workStartTime: string;
   workEndTime: string;
+  intervalTime: string;
   positionId: number;
 }
 
@@ -66,6 +67,18 @@ const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
       "Invalid time format (HH:mm)"
     )
     .test("valid-time", "Invalid end time", (value) => {
+      if (!value) return false;
+      const [hours, minutes] = value.split(":").map(Number);
+      return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
+    }),
+  intervalTime: yup
+    .string()
+    .required("Interval time is required")
+    .matches(
+      /^(?:([01]?[0-9]|2[0-3]):([0-5][0-9]))$/,
+      "Invalid time format (HH:mm)"
+    )
+    .test("valid-time", "Invalid interval time", (value) => {
       if (!value) return false;
       const [hours, minutes] = value.split(":").map(Number);
       return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
@@ -273,6 +286,21 @@ export const EditEmployee: React.FC = () => {
                   label="Work Start Time"
                   name="workStartTime"
                   placeholder="HH:MM"
+                  inputProps={{
+                    minLength: 5,
+                    maxLength: 5,
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                <VTextField
+                  fullWidth
+                  disabled={isLoading}
+                  label="Interval Time"
+                  name="intervalTime"
                   inputProps={{
                     minLength: 5,
                     maxLength: 5,

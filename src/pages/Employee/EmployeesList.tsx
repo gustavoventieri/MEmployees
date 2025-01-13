@@ -111,18 +111,34 @@ export const EmployeesList: React.FC = () => {
 
   function isWorking(workStartTime: string, workEndTime: string): string {
     const now = new Date();
+
+    // Horário atual
     const [currentHours, currentMinutes] = [now.getHours(), now.getMinutes()];
 
+    // Horário de início e término de trabalho
     const [startHours, startMinutes] = workStartTime.split(":").map(Number);
     const [endHours, endMinutes] = workEndTime.split(":").map(Number);
 
+    // Configurando os horários de início e término de trabalho
     const startTime = new Date();
     startTime.setHours(startHours, startMinutes, 0, 0);
 
     const endTime = new Date();
     endTime.setHours(endHours, endMinutes, 0, 0);
 
-    // Se o horário atual estiver entre o horário de início e o horário de término
+    // Calculando o horário de intervalo (1 hora após o início do expediente)
+    const breakStartTime = new Date(startTime.getTime());
+    breakStartTime.setHours(startHours + 1, startMinutes, 0, 0); // Intervalo começa 1 hora após o início do expediente
+
+    const breakEndTime = new Date(breakStartTime.getTime());
+    breakEndTime.setHours(breakStartTime.getHours() + 1); // Intervalo dura 1 hora
+
+    // Verificando se está no horário de intervalo
+    if (breakStartTime <= now && breakEndTime >= now) {
+      return "Intervalo";
+    }
+
+    // Verificando se o horário atual está dentro do horário de trabalho
     if (startTime <= now && endTime >= now) {
       return "Trabalhando";
     }
@@ -194,6 +210,12 @@ export const EmployeesList: React.FC = () => {
                         "Não Trabalhando" && (
                         <TableCell>
                           <Chip label="Not Working" color="error" />
+                        </TableCell>
+                      )) ||
+                      (isWorking(row.workStartTime, row.workEndTime) ===
+                        "Intervalo" && (
+                        <TableCell>
+                          <Chip label="BreakTime" color="warning" />
                         </TableCell>
                       ))}
 
