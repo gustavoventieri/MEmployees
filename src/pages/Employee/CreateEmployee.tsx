@@ -10,6 +10,7 @@ import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
 import { employeeService } from "../../shared/services/api/controllers/employee/EmployeeServices";
 import { Enviroment } from "../../shared/environment";
 import { AutoCompletePosition } from "./components/AutoComplete";
+import { encryptData } from "../../shared/services/decrypt/CryptoServices";
 
 interface IFormData {
   name: string;
@@ -59,7 +60,28 @@ const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
       if (!value) return false;
       const [hours, minutes] = value.split(":").map(Number);
       return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
-    }),
+    })
+    .test(
+      "interval-between-start-end",
+      "Interval time must be between start and end times",
+      function (value) {
+        const { workStartTime, workEndTime } = this.parent;
+        if (!workStartTime || !workEndTime || !value) return true;
+
+        const [startHours, startMinutes] = workStartTime.split(":").map(Number);
+        const [endHours, endMinutes] = workEndTime.split(":").map(Number);
+        const [intervalHours, intervalMinutes] = value.split(":").map(Number);
+
+        const startTimeInMinutes = startHours * 60 + startMinutes;
+        const endTimeInMinutes = endHours * 60 + endMinutes;
+        const intervalTimeInMinutes = intervalHours * 60 + intervalMinutes;
+
+        return (
+          intervalTimeInMinutes > startTimeInMinutes &&
+          intervalTimeInMinutes < endTimeInMinutes
+        );
+      }
+    ),
 });
 
 export const CreateEmployee: React.FC = () => {
@@ -68,11 +90,6 @@ export const CreateEmployee: React.FC = () => {
 
   const [isLoading, setLoading] = useState(false); // Seta o loading
 
-  const secretKey = Enviroment.PASSDECRYPT; // Senha Jwt
-
-  const encryptData = (data: number) => {
-    return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
-  };
 
   const handleSave = (dados: IFormData) => {
     formValidationSchema

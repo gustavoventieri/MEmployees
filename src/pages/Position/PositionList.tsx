@@ -27,6 +27,7 @@ import {
   PositionService,
 } from "../../shared/services/api/controllers/position/PositionServices";
 import { TSeverity } from "../../shared/components/AlertBox/types/TSeverity";
+import { encryptData } from "../../shared/services/decrypt/CryptoServices";
 
 export const PositionList: React.FC = () => {
   const location = useLocation();
@@ -43,11 +44,6 @@ export const PositionList: React.FC = () => {
   const [rows, setRows] = useState<IPositionList[]>([]); // Seta as linhas da tabela
   const [count, setCount] = useState(0); // Seta o count da tabela
   const [isLoading, setIsLoading] = useState(true); // Seta o loading
-  const secretKey = Enviroment.PASSDECRYPT;
-
-  const encryptData = (data: number) => {
-    return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
-  };
 
   const search = useMemo(() => {
     const query = searchParams.get("search") || "";

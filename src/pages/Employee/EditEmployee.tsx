@@ -82,7 +82,28 @@ const formValidationSchema: yup.ObjectSchema<IFormData> = yup.object().shape({
       if (!value) return false;
       const [hours, minutes] = value.split(":").map(Number);
       return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
-    }),
+    })
+    .test(
+      "interval-between-start-end",
+      "Interval time must be between start and end times",
+      function (value) {
+        const { workStartTime, workEndTime } = this.parent;
+        if (!workStartTime || !workEndTime || !value) return true;
+
+        const [startHours, startMinutes] = workStartTime.split(":").map(Number);
+        const [endHours, endMinutes] = workEndTime.split(":").map(Number);
+        const [intervalHours, intervalMinutes] = value.split(":").map(Number);
+
+        const startTimeInMinutes = startHours * 60 + startMinutes;
+        const endTimeInMinutes = endHours * 60 + endMinutes;
+        const intervalTimeInMinutes = intervalHours * 60 + intervalMinutes;
+
+        return (
+          intervalTimeInMinutes > startTimeInMinutes &&
+          intervalTimeInMinutes < endTimeInMinutes
+        );
+      }
+    ),
 });
 
 export const EditEmployee: React.FC = () => {

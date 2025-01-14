@@ -1,11 +1,9 @@
-import azul from "../assets/laranja.jpg";
-import laranja from "../assets/azul.jpg";
-import red from "../assets/red.jpg";
-import laptop from "../assets/laptop.png";
+import linhas from "../assets/linhas.gif";
+import circle from "../assets/circle.gif";
+import prisma from "../assets/prisma.gif";
 
 export const photos = {
-  red,
-  laranja,
-  azul,
-  laptop,
+  circle,
+  linhas,
+  prisma,
 };

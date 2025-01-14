@@ -9,6 +9,7 @@ import { VTextField, VForm, useVForm, IVFormErrors } from "../../shared/forms";
 import { Enviroment } from "../../shared/environment";
 import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
 import { PositionService } from "../../shared/services/api/controllers/position/PositionServices";
+import { encryptData } from "../../shared/services/decrypt/CryptoServices";
 
 interface IFormData {
   name: string;
@@ -23,11 +24,9 @@ export const CreatePosition: React.FC = () => {
   const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
   const [isLoading, setLoading] = useState(false); // Seta o loading
-  const secretKey = Enviroment.PASSDECRYPT;
 
-  const encryptData = (data: number) => {
-    return CryptoJS.AES.encrypt(data.toString(), secretKey).toString();
-  };
+
+  
 
   const handleSave = (dados: IFormData) => {
     formValidationSchema

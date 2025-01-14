@@ -203,19 +203,40 @@ export const EmployeesList: React.FC = () => {
                     {(isWorking(row.workStartTime, row.workEndTime) ===
                       "Trabalhando" && (
                       <TableCell>
-                        <Chip label="Working" color="success" />
+                        <Chip
+                          label="Working"
+                          sx={{
+                            color: "green",
+                            background: "#B2FABC",
+                            fontWeight: "bold",
+                          }}
+                        />
                       </TableCell>
                     )) ||
                       (isWorking(row.workStartTime, row.workEndTime) ===
                         "Não Trabalhando" && (
                         <TableCell>
-                          <Chip label="Not Working" color="error" />
+                          <Chip
+                            label="Not Working"
+                            sx={{
+                              color: "red",
+                              background: "#fddee2 ",
+                              fontWeight: "bold",
+                            }}
+                          />
                         </TableCell>
                       )) ||
                       (isWorking(row.workStartTime, row.workEndTime) ===
                         "Intervalo" && (
                         <TableCell>
-                          <Chip label="BreakTime" color="warning" />
+                          <Chip
+                            label="BreakTime"
+                            sx={{
+                              color: "orange",
+                              background: "#ffffe0 ",
+                              fontWeight: "bold",
+                            }}
+                          />
                         </TableCell>
                       ))}
 
