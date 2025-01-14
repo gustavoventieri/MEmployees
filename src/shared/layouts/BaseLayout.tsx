@@ -13,7 +13,7 @@ import { useAppThemeContext, useDrawerContext } from "../contexts";
 import { SideBar } from "../components";
 
 interface IBaseLayoutProps {
-  title: string;
+  title: string | boolean;
   toolsBar?: ReactNode;
   children: React.ReactNode;
 }

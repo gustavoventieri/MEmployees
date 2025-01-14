@@ -174,7 +174,7 @@ export const EditEmployee: React.FC = () => {
             setLoading(false);
             if (result instanceof Error) {
               console.log(result.message);
-              navigate("/position", {
+              navigate("/employee", {
                 state: {
                   message: "Employee wasn't updated!",
                   severity: "error",

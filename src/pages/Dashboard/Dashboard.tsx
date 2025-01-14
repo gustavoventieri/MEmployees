@@ -1,15 +1,18 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 
-import { ToolsBar } from "../../shared/components";
+import { AlertBox, ToolsBar } from "../../shared/components";
 import { BaseLayout } from "../../shared/layouts";
 import { useEffect, useState } from "react";
 import { PositionService } from "../../shared/services/api/controllers/position/PositionServices";
 import { employeeService } from "../../shared/services/api/controllers/employee/EmployeeServices";
 import { UseToken } from "../../shared/hooks";
 import { AdminService } from "../../shared/services/api/controllers/admin/AdminServices";
+import { TSeverity } from "../../shared/components/AlertBox/types/TSeverity";
+import { useLocation } from "react-router-dom";
 
 export const Dashboard = () => {
-  const { role } = UseToken();
+  const { role, uid } = UseToken();
+  const location = useLocation();
 
   const [isLoadingPositions, setIsLoadingPositions] = useState(true); // Seta o loading de Positions
   const [totalCountPositions, setTotalCountPositions] = useState(0); // Seta o total de position
@@ -19,6 +22,14 @@ export const Dashboard = () => {
 
   const [isLoadingAdmins, setIsLoadingAdmins] = useState(true); // Seta o loading de Admins
   const [totalCountAdmins, setTotalCountAdmins] = useState(0); // Seta o total de Admins
+
+  const [message, setMessage] = useState("");
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [severity, setSeverity] = useState<TSeverity>("success");
+
+  const handleClose = () => {
+    setOpenSnackBar(false);
+  };
 
   useEffect(() => {
     setIsLoadingPositions(true);
@@ -52,15 +63,23 @@ export const Dashboard = () => {
         setTotalCountAdmins(result.totalCount);
       }
     });
-  }, []);
+
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setOpenSnackBar(true);
+    }
+  }, [location.state]);
 
   return (
-    <BaseLayout title="Dashboard" toolsBar={<ToolsBar showNewButton={false} />}>
+    <BaseLayout
+      title="Dashboard - Olá, Gustavo!"
+      toolsBar={<ToolsBar showNewButton={false} />}
+    >
       <Box width="100%" display="flex">
         <Grid container margin={2}>
           <Grid item container spacing={2}>
-            <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
-              {role === "Admin" && (
+            {role === "Admin" && (
+              <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
                 <Card>
                   <CardContent>
                     <Typography variant="h5" align="center">
@@ -82,8 +101,9 @@ export const Dashboard = () => {
                     </Box>
                   </CardContent>
                 </Card>
-              )}
-            </Grid>
+              </Grid>
+            )}
+
             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
               <Card>
                 <CardContent>
@@ -136,6 +156,12 @@ export const Dashboard = () => {
             </Grid>
           </Grid>
         </Grid>
+        <AlertBox
+          message={message}
+          open={openSnackBar}
+          onClose={handleClose}
+          severity={severity}
+        />
       </Box>
     </BaseLayout>
   );

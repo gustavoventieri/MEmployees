@@ -15,7 +15,7 @@ export interface IUserList {
   password: string;
 }
 
-type TAdminCount = {
+type TUserCount = {
   data: IUserList[];
   totalCount: number;
 };
@@ -24,7 +24,7 @@ const getAll = async (
   page = 1,
   filter = "",
   id = 0
-): Promise<TAdminCount | Error> => {
+): Promise<TUserCount | Error> => {
   try {
     const urlRelativa = `/user?page=${page}&limit=${Enviroment.LIMITE_LINHAS}&filter=${filter}&id=${id}`;
 

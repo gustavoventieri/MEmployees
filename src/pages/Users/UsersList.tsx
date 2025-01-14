@@ -1,6 +1,5 @@
 import {
   Box,
-  Chip,
   Icon,
   IconButton,
   LinearProgress,
@@ -28,6 +27,7 @@ import {
   IUserList,
   UserServices,
 } from "../../shared/services/api/controllers/users/UsersServices";
+import { TSeverity } from "../../shared/components/AlertBox/types/TSeverity";
 
 export const UsersList: React.FC = () => {
   const location = useLocation();
@@ -40,6 +40,8 @@ export const UsersList: React.FC = () => {
   const [deleteId, setDeleteId] = useState<number | null>(null); // Armazena o ID do item a ser excluído
   const [message, setMessage] = useState(""); // Seta a mensagem do Alert
   const [openSnackBar, setOpenSnackBar] = useState(false); // Seta o estado do Alert
+  const [severity, setSeverity] = useState<TSeverity>("success"); // Seta o nivel do Alert
+
   const [rows, setRows] = useState<IUserList[]>([]); // SEta as linhas da tabela
   const [count, setCount] = useState(0); //Seta o count de Emploeyees
   const [isLoading, setIsLoading] = useState(true); // Seta o Loading
@@ -96,7 +98,8 @@ export const UsersList: React.FC = () => {
         console.log(result.message);
       } else {
         setRows((oldRows) => oldRows.filter((row) => row.id !== deleteId));
-        setMessage("Employee Deleted!");
+        setMessage("User Deleted!");
+        setSeverity("success");
         setOpenSnackBar(true);
       }
       setOpenDialog(false);
@@ -106,13 +109,13 @@ export const UsersList: React.FC = () => {
 
   return (
     <BaseLayout
-      title="List Employees"
+      title="List Users"
       toolsBar={
         <ToolsBar
           showSearchInput
           showNewButton
           searchText={search}
-          handleClinkNew={() => navigate("/employee/new")}
+          handleClinkNew={() => navigate("/user/new")}
           changeTextOnSearchInput={(texto) =>
             setSearchParams({ search: texto, page: "1" }, { replace: true })
           }
@@ -128,11 +131,9 @@ export const UsersList: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell width={100}>Actions</TableCell>
-              <TableCell>Status</TableCell>
 
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Position</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -152,7 +153,7 @@ export const UsersList: React.FC = () => {
                       </IconButton>
                       <IconButton
                         size="small"
-                        onClick={() => navigate(`/employee/edit/${encodedId}`)}
+                        onClick={() => navigate(`/user/edit/${encodedId}`)}
                       >
                         <Icon>edit</Icon>
                       </IconButton>
@@ -216,7 +217,7 @@ export const UsersList: React.FC = () => {
         message={message}
         open={openSnackBar}
         onClose={handleClose}
-        severity="success"
+        severity={severity}
       />
     </BaseLayout>
   );

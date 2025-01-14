@@ -5,7 +5,7 @@ export interface IAdminDetails {
   id: number;
   name: string;
   email: string;
-  password: string;
+  password?: string;
 }
 
 export interface IAdminList {
@@ -85,7 +85,7 @@ const getById = async (id: number): Promise<IAdminDetails | Error> => {
 
 const updateById = async (
   id: number,
-  dados: IAdminDetails
+  dados: Omit<IAdminDetails, "id">
 ): Promise<void | Error> => {
   try {
     await api.put(`/admin/${id}`, dados);

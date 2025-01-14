@@ -9,6 +9,7 @@ export * from "./Position/CreatePosition";
 export * from "./Position/EditPosition";
 
 export * from "./Users/UsersList";
+export * from "./Users/UserCreate";
 
 export * from "./Admin/AdminCreate";
 export * from "./Admin/AdminsList";

@@ -14,10 +14,12 @@ import {
   CreateEmployee,
   Login,
   UsersList,
+  CreateUser,
 } from "../pages";
 
 import { ProtectedRoute } from "../shared/services/api/controllers/auth/ProtectedRoutes";
-
+import EditUser from "../pages/Users/UserEdit";
+import { Settings } from "../pages/Settings/Settings";
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
   const { isAuthenticated } = useAuthContext();
@@ -69,11 +71,13 @@ export const AppRoutes = () => {
         <Route path="/position/edit/:id" element={<EditPosition />} />
 
         <Route path="/user" element={<UsersList />} />
-        <Route path="/user/new" element={<CreatePosition />} />
-        <Route path="/user/edit/:id" element={<EditPosition />} />
+        <Route path="/user/new" element={<CreateUser />} />
+        <Route path="/user/edit/:id" element={<EditUser />} />
 
         <Route path="/admin" element={<AdminsList />} />
         <Route path="/admin/new" element={<AdminCreate />} />
+
+        <Route path="/settings" element={<Settings />} />
 
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Route>

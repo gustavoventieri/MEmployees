@@ -13,7 +13,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import CryptoJS from "crypto-js";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
