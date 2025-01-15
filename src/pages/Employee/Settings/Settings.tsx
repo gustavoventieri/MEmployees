@@ -8,15 +8,16 @@ import {
   IconButton,
   InputAdornment,
   Icon,
+  useMediaQuery,
+  Theme,
 } from "@mui/material";
 import * as yup from "yup";
-import { BaseLayout } from "../../shared/layouts/BaseLayout";
-import { UseToken } from "../../shared/hooks";
-import { UserServices } from "../../shared/services/api/controllers/users/UsersServices";
+import { BaseLayout } from "../../../shared/layouts/BaseLayout";
+import { UseToken } from "../../../shared/hooks";
+import { UserServices } from "../../../shared/services/api/controllers/users/UsersServices";
 import { useNavigate } from "react-router-dom";
-import { AdminService } from "../../shared/services/api/controllers/admin/AdminServices";
-import { AuthService } from "../../shared/services/api/controllers/auth/AuthService";
-
+import { AdminService } from "../../../shared/services/api/controllers/admin/AdminServices";
+import { AuthService } from "../../../shared/services/api/controllers/auth/AuthService";
 
 // Schema de validação
 const settingsSchema = yup.object().shape({
@@ -70,7 +71,6 @@ export const Settings = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { uid, role } = UseToken();
- 
 
   const navigate = useNavigate();
 
@@ -101,7 +101,6 @@ export const Settings = () => {
       }
     }
   }, [uid]);
-
 
   const handleSubmit = () => {
     setIsLoading(true);
@@ -340,20 +339,21 @@ export const Settings = () => {
   };
 
   return (
-    <BaseLayout title={false} toolsBar={false}>
+    <BaseLayout title="Edit Your Profile" toolsBar={false}>
       <Box
         sx={{
-          width: { xs: "95%", sm: "75%", md: "60%", lg: "50%" },
+          width: { xs: "75%", sm: "75%", md: "60%", lg: "50%" },
+
           margin: "auto",
           padding: 4,
 
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          boxShadow: "30px 40px 30px 20px rgba(0, 0, 0, 0.1)",
           borderRadius: 4,
           marginTop: { xs: 4, sm: 8 },
         }}
       >
         <Typography variant="h4" fontWeight="bold" textAlign="center" mb={3}>
-          Edit User
+          Edit Your Profile
         </Typography>
         <Typography variant="subtitle1" textAlign="center" mb={4}>
           Update your profile information below.
@@ -417,7 +417,7 @@ export const Settings = () => {
                   onClick={() => setShowOldPassword(!showOldPassword)}
                 >
                   {showOldPassword ? (
-                    <Icon>visibility</Icon>
+                    <Icon sx={{ color: "primary.main" }}>visibility</Icon>
                   ) : (
                     <Icon>visibility_off</Icon>
                   )}
@@ -447,7 +447,7 @@ export const Settings = () => {
               <InputAdornment position="end">
                 <IconButton onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? (
-                    <Icon>visibility</Icon>
+                    <Icon sx={{ color: "primary.main" }}>visibility</Icon>
                   ) : (
                     <Icon>visibility_off</Icon>
                   )}
@@ -479,7 +479,7 @@ export const Settings = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
-                    <Icon>visibility</Icon>
+                    <Icon sx={{ color: "primary.main" }}>visibility</Icon>
                   ) : (
                     <Icon>visibility_off</Icon>
                   )}

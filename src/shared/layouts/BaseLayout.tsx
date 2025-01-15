@@ -52,6 +52,7 @@ export const BaseLayout: React.FC<IBaseLayoutProps> = ({
             overflow="hidden"
             whiteSpace="nowrap"
             textOverflow="ellipsis"
+            fontWeight={900}
             marginLeft={1}
           >
             {title}

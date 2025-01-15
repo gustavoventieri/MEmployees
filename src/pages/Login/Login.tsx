@@ -124,7 +124,7 @@ export const Login = () => {
           width: "80%", // 80% da largura
           height: "80%", // 80% da altura
           borderRadius: 2, // Optional, arredonda as bordas
-          boxShadow: 3, // Optional, adiciona sombra
+          boxShadow: 19, // Optional, adiciona sombra
           overflow: "hidden", // Impede o conteúdo de transbordar
         }}
       >

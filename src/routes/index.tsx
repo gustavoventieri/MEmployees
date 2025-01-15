@@ -19,7 +19,7 @@ import {
 
 import { ProtectedRoute } from "../shared/services/api/controllers/auth/ProtectedRoutes";
 import EditUser from "../pages/Users/UserEdit";
-import { Settings } from "../pages/Settings/Settings";
+import { Settings } from "../pages/Employee/Settings/Settings";
 export const AppRoutes = () => {
   const { setDrawerOptions } = useDrawerContext();
   const { isAuthenticated } = useAuthContext();
