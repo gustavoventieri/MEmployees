@@ -105,3 +105,4 @@ Uma API REST moderna que explora conceitos essenciais do backend, com foco em bo
 
 - Desenvolvimento de um **front-end moderno** com **React.js** e **TypeScript** para consumir a API e oferecer uma interface completa.  
 - Integração de novas funcionalidades, como gestão avançada de permissões e relatórios detalhados.  
+

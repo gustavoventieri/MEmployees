@@ -27,6 +27,7 @@ export const signIn = async (
 
   // Tenta buscar o usuário
   const user = await UserProvider.getByEmail(email);
+  
 
   // Se o usuário não for encontrado, tenta buscar o administrador
   if (user instanceof Error) {
