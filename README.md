@@ -152,6 +152,4 @@ O backend estará acessível em `http://localhost:8080` (ou outro endpoint confi
 ### 🎉 Agradecimentos
 Agradecemos pelo interesse no **MEMployees**! Este projeto é uma forma de tornar a gestão de funcionários mais eficiente e com a tecnologia de hoje.
 
----
 
-> **MEMployees** é um projeto open-source, que visa melhorar a organização e produtividade de empresas através de uma gestão de recursos humanos simplificada e eficiente.
