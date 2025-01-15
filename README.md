@@ -2,7 +2,6 @@
 
 O frontend do **MEmployees** é a interface que permite a interação com o sistema de gerenciamento de funcionários, oferecendo uma experiência de usuário fluida e moderna. Utilizando **React**, **Material-UI**, e outras tecnologias avançadas, o sistema oferece uma dashboard elegante para monitoramento e gerenciamento de dados essenciais.
 
----
 
 ## **📌 Funcionalidades do Projeto**
 
@@ -22,7 +21,6 @@ O frontend do **MEmployees** é a interface que permite a interação com o sist
 📈 **Validação e Fluxo de Dados**
 - Validação de dados com **Yup** para garantir que as informações sejam precisas e válidas.
 
----
 
 ## **📂 Estrutura do Projeto**
 
@@ -32,7 +30,6 @@ O frontend do **MEmployees** é a interface que permite a interação com o sist
 - **/pages**: Páginas principais da aplicação.
 - **/hooks**: Hooks personalizados para controle de estado e lógica de aplicação.
 
----
 
 ## **🚀 Guia de Configuração**
 
@@ -64,7 +61,7 @@ O frontend do **MEmployees** é a interface que permite a interação com o sist
 
 O frontend estará disponível em `http://localhost:3000`.
 
----
+
 
 ## **🔧 Tecnologias Principais**
 
@@ -88,21 +85,13 @@ O frontend estará disponível em `http://localhost:3000`.
 - **@testing-library/react**: Utilizada para testar os componentes React.
 - **Jest**: Framework de testes para garantir que os componentes e funcionalidades funcionem corretamente.
   
----
+
 
 ## **🎯 Funcionalidades Adicionais**
 - **ThemeProvider** com suporte a modo claro/escuro utilizando **Material-UI**.
 - **Input Masks** com a biblioteca **imaskjs** para facilitar a inserção de dados específicos.
 - **React Router** para controle de navegação entre as páginas da aplicação.
   
----
-
-## **💡 Melhorias Futuras**
-- Integração de novos tipos de gráficos e relatórios avançados.
-- Melhorias na performance e otimização de renderização de componentes.
-- Adição de novos recursos de personalização do usuário.
-
----
 
 ## **📦 Scripts do Projeto**
 
@@ -121,20 +110,5 @@ O frontend estará disponível em `http://localhost:3000`.
   yarn test
   ```
 
----
 
-## **Licença**
 
-Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-
-## **Contato**
-- **Autor**: [Seu Nome](https://www.linkedin.com/in/seu-perfil)
-- **Repositório**: [GitHub - MEMployees Frontend](https://github.com/SEU_USUARIO/memployees-frontend)
-
----
-
-> **MEmployees ** é uma interface de usuário moderna e fácil de usar, projetada para se integrar perfeitamente ao sistema de gerenciamento de funcionários desenvolvido no backend. Ele foi criado para garantir uma experiência visual agradável e interativa ao usuário final.
-
----
