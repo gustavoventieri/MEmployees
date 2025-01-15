@@ -1,108 +1,157 @@
-# **MEmployees**  
 
-Uma API REST moderna que explora conceitos essenciais do backend, com foco em boas práticas, segurança e organização de código. Em breve, será complementada por um front-end integrado para oferecer uma experiência completa ao usuário.  
+# MEmployees - Management Employees
 
-> **Status do Projeto:** Em Desenvolvimento  
+> Em Desenvolvimento
 
----
+**MEmployees** é uma solução robusta e inovadora destinada a facilitar a gestão de recursos humanos em empresas de diferentes portes e setores. O sistema oferece funcionalidades poderosas para controlar informações vitais dos funcionários, incluindo cargos, horários de trabalho, escalas e alocação de setores. Além disso, a plataforma possui uma dashboard moderna e intuitiva, projetada para fornecer uma visão clara e precisa dos dados dos colaboradores em tempo real.
 
-## **📌 Funcionalidades do Projeto**  
+Com **MEmployees**, é possível otimizar o gerenciamento de equipes, monitorando a produtividade, o número de funcionários em cada cargo e garantindo que os horários de trabalho sejam respeitados. A plataforma permite uma gestão eficiente das informações, promovendo transparência e organização dentro da empresa. Tudo isso, aliado a um design limpo e elegante, proporciona uma experiência de usuário excepcional.
 
-💡 **Gerenciamento de Dados**  
-- Controle de usuários com email e senha.  
-- Criptografia de senhas utilizando **bcryptjs**.  
-- Paginação e filtros para consultas otimizadas.  
+Este projeto foi desenvolvido utilizando tecnologias de ponta, como Node.js, React, TypeScript e PostgreSQL, garantindo não apenas a escalabilidade do sistema, mas também um desempenho elevado para atender empresas de diversos tamanhos. Com uma estrutura flexível e moderna, **MEmployees** é a solução ideal para quem busca otimizar e profissionalizar a administração de recursos humanos.
 
-🔒 **Segurança e Autenticação**  
-- Geração e validação de tokens JWT.  
-- Validação detalhada de dados recebidos nos endpoints.  
 
-⚙️ **Banco de Dados**  
-- Migrations para controle de versões do banco.  
-- Seeds para inicialização de dados.  
-- Query builder com **Knex** para consultas dinâmicas e flexíveis.  
 
-🧪 **Qualidade de Código**  
-- Testes automatizados com **Jest** e **Supertest**.  
-- Adoção de boas práticas de **Clean Code** e organização modular.  
 
-🎨 **Futuro Front-End**  
-- Planejamento de um front-end robusto para consumir a API, proporcionando uma interface amigável e intuitiva para os usuários.  
-- O front-end será desenvolvido com tecnologias modernas como **React.js** e **TypeScript**.  
 
----
+## Tecnologias Usadas
 
-## **📂 Estrutura do Projeto**  
+- **Backend**: Node.js com TypeScript
+- **Frontend**: React com TypeScript
+- **Banco de Dados**:
+  - **Produção**: PostgreSQL
+  - **Desenvolvimento/Teste**: SQLite
+- **Testes**: Jest (para testes unitários)
+- **Estilo**: Material-UI para uma interface limpa e moderna
 
-- **Endpoints e Controllers**: Organização modular para facilitar manutenção e escalabilidade.  
-- **Banco de Dados SQL**: Suporte para múltiplos bancos de dados durante o desenvolvimento e produção.  
-- **Middleware**: Centralização de validações, autenticação e outras regras de negócio.  
 
----
 
-## **🚀 Guia de Configuração**  
+## Funcionalidades
 
-### **Passo 1: Pré-requisitos**  
-- **Node.js** instalado.  
-- Gerenciador de pacotes **Yarn** (recomendado).  
+### 📊 Dashboard
+- Visão geral dos dados dos funcionários.
+- **Total de Funcionários** na empresa.
+- **Total de Cargos** e setores.
+- **Grafico com Todas as Informações** 
 
-### **Passo 2: Instalação do Projeto**  
 
-1. Clone o repositório:  
+  
+### 👩‍💻 Gestão de Funcionários
+- **Cadastro e Edição** de funcionários.
+- **Atribuição de Cargos** e **setores**.
+- **Controle de Horários** e escalas de trabalho.
+  
+### ⚙️ Gestão de Cargos
+- Adicionar, editar e excluir **cargos**.
+- **Atribuição** de funcionários aos cargos corretos.
+
+### 🧪 Testes
+- Testes unitários para garantir a estabilidade e a confiabilidade do sistema com o **Jest**.
+
+
+
+## Como Rodar o Projeto
+
+### 🛠️ Pré-requisitos
+- [Node.js](https://nodejs.org/en/) - Versão recomendada: v14.x.x ou superior.
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/) - Para gerenciar dependências.
+- [PostgreSQL](https://www.postgresql.org/) para ambiente de produção.
+- [SQLite](https://www.sqlite.org/) para ambiente de desenvolvimento e testes.
+
+### ⚡ Estrutura do Projeto
+
+A estrutura do projeto é dividida em **frontend** e **backend**:
+
+- **Frontend**: Localizado na raiz do projeto (pasta raiz).
+- **Backend**: Localizado dentro da pasta `./api/`.
+
+
+
+### ⚡ Inicialização do Projeto
+
+### 1. **Clone este repositório**:
    ```bash
    git clone https://github.com/gustavoventieri/MEmployees.git
-   ```  
-
-2. Acesse a pasta do projeto:  
-   ```bash
    cd MEmployees
-   ```  
+```
+#### 2. **Rodando o Frontend (na raiz do projeto)**
 
-3. Instale as dependências:  
+O frontend foi desenvolvido utilizando React e TypeScript, e fica localizado na pasta raiz do projeto.
+
+- **Instale as dependências do frontend**:
    ```bash
+   npm install
+   # ou
    yarn install
-   ```  
+   ```
 
-4. Configure o ambiente:  
-   Crie um arquivo `.env` com o seguinte conteúdo:  
-   ```env
-   PORT=3333
-   NODE_ENV=dev
-   IS_LOCALHOST=true
-   ENABLED_CORS=[Lista de endereços separados por ";"]
-   JWT_SECRET=[Uma string segura]
-   ```  
-
-5. Inicie o servidor:  
+- **Inicie o frontend**:
    ```bash
+   npm run start
+   # ou
    yarn start
-   ```  
+   ```
+
+O frontend estará acessível em `http://localhost:3000`.
+
+#### 3. **Rodando o Backend (dentro de ./api/)**
+
+O backend foi desenvolvido com Node.js e fica localizado na pasta `./api/`.
+
+- **Instale as dependências do backend**:
+   ```bash
+   cd api
+   npm install
+   # ou
+   yarn install
+   ```
+
+- **Inicie o backend**:
+   ```bash
+   npm run start
+   # ou
+   yarn start
+   ```
+
+O backend estará acessível em `http://localhost:8080` (ou outro endpoint configurado no seu `server.ts`).
+
+#### 4. **Rodando os Testes**
+
+- **Para rodar os testes do backend**:
+   ```bash
+   cd api
+   npm run test
+   # ou
+   yarn test
+   ```
+
+
+
+
+
+## Estrutura do Projeto
+
+- **/MEmployees**: Contém o código-fonte do frontend (React + TypeScript).
+  - **/src**: Contém a lógica da interface de usuário e integração com a API.
+  
+- **/api**: Contém o código-fonte do backend (Node.js).
+  - **/controllers**: Lógica de controle da API.
+  - **/models**: Definições de modelos de dados (com PostgreSQL).
+  - **/routes**: Definições das rotas da API.
+  
+
+
+
+
+## Contato
+
+- **Autor**: [Gustavo Ventieri](https://www.linkedin.com/in/gustavo-ventieri/)
+- **Repositório**: [GitHub - MEMployees](https://github.com/gustavoventieri/MEmployees)
+
+
+
+### 🎉 Agradecimentos
+Agradecemos pelo interesse no **MEMployees**! Este projeto é uma forma de tornar a gestão de funcionários mais eficiente e com a tecnologia de hoje.
 
 ---
 
-## **🔧 Tecnologias Principais**  
-
-### **🖥️ Linguagens e Frameworks**  
-- **Node.js**: Ambiente de execução para JavaScript no lado do servidor.  
-- **Express**: Framework minimalista para criar aplicações web e APIs robustas.  
-
-### **🗂️ Banco de Dados**  
-- **SQLite**: Banco de dados leve e eficiente, ideal para desenvolvimento local.  
-- **Knex**: Query Builder para facilitar a interação com bancos de dados SQL.  
-
-### **🔒 Autenticação e Segurança**  
-- **JWT (JsonWebToken)**: Geração e validação de tokens para autenticação segura.  
-- **Bcryptjs**: Biblioteca para hash e verificação de senhas, garantindo segurança.  
-
-### **✅ Validação e Testes**  
-- **Yup**: Validação de esquemas para garantir a integridade dos dados recebidos.  
-- **Jest**: Framework de testes poderoso e fácil de usar.  
-- **Supertest**: Ferramenta para testar endpoints de APIs, garantindo confiabilidade.  
-
----
-
-## **🌟 Próximos Passos**  
-
-- Desenvolvimento de um **front-end moderno** com **React.js** e **TypeScript** para consumir a API e oferecer uma interface completa.  
-- Integração de novas funcionalidades, como gestão avançada de permissões e relatórios detalhados.  
-
+> **MEMployees** é um projeto open-source, que visa melhorar a organização e produtividade de empresas através de uma gestão de recursos humanos simplificada e eficiente.
