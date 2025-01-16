@@ -13,7 +13,7 @@ export const getAll = async (
     const result = await Knex(ETableNames.employees)
       .select("*")
       .where("id", Number(id))
-      .orWhereRaw("LOWER(name) LIKE ?", [`%${filter.toLowerCase()}%`]) // Usando LOWER() para insensibilidade
+      .orWhere("name", "ilike", `%${filter}%`) // ILIKE para busca insensível a maiúsculas/minúsculas
       .offset((page - 1) * limit)
       .limit(limit);
 
