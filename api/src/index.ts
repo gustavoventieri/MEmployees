@@ -10,10 +10,12 @@ const startServer = () => {
 
 // Condição que confere se o estado da aplicação está local ou em produção
 if (process.env.IS_LOCALHOST !== "true") {
-  console.log("Rodando migrations");
+  console.log("Rodando rollback");
   Knex.migrate
-    .rollback()
+    .rollback({}, true)
     .then(() => {
+      console.log("Rodando migrations");
+
       Knex.migrate
         .latest()
         .then(() => {
